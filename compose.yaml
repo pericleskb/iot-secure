@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  python-app:
+    build: .
+    container_name: python-app
+    depends_on:
+      - mariadb
+    environment:
+      - MYSQL_HOST=mariadb
+      - MYSQL_PORT=3306
+      - MYSQL_USER=admin_user
+      - MYSQL_PASSWORD=root123
+      - MYSQL_DATABASE=mydb
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: admin_user
+      MYSQL_PASSWORD: root123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:

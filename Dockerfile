@@ -48,9 +48,10 @@ USER appuser
 
 # Copy the source code into the container.
 COPY . .
+COPY ./init.sh /init.sh
 
 # Expose the port that the application listens on.
 EXPOSE 8000
 
-# Run the application.
-CMD python manage.py runserver
+#RUN #chmod +x /init.sh
+ENTRYPOINT ["/init.sh"]

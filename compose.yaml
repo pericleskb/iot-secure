@@ -7,11 +7,11 @@ services:
     depends_on:
       - mariadb
     environment:
-      - MYSQL_HOST=mariadb
-      - MYSQL_PORT=3306
-      - MYSQL_USER=admin_user
-      - MYSQL_PASSWORD=root123
-      - MYSQL_DATABASE=mydb
+      MYSQL_HOST: mariadb
+      MYSQL_PORT: 3306
+      MYSQL_USER: admin_user
+      MYSQL_PASSWORD: root123
+      MYSQL_DATABASE: mydb
     volumes:
       - .:/app
     ports:
@@ -22,6 +22,7 @@ services:
   mariadb:
     image: mariadb:latest
     container_name: mariadb
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: mydb

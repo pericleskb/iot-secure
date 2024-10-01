@@ -5,7 +5,6 @@
 set -e
 
 # Run database migrations
-echo "@@@"
 python manage.py makemigrations web_server
 python manage.py migrate
 

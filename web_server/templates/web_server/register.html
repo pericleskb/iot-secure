@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .register-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .register-button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Admin Register</h2>
+
+        <form id="register-form" action="{% url 'web_server:register' %}" method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <input type="hidden" id="hashed-password" name="password">
+            <div class="input-group">
+                <label for="password">Confirm Password</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+            <span id="error-message" class="error"></span><br>
+            <button type="submit" class="register-button">Register</button>
+        </form>
+
+        <script>
+            async function hashPassword(password) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                return hashHex;
+            }
+
+            const form = document.getElementById('register-form');
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                if (validateForm()) {
+                    const passwordField = document.getElementById('password');
+                    const hashedPassword = await hashPassword(passwordField.value);
+                    const hiddenPasswordField = document.getElementById('hashed-password');
+                    hiddenPasswordField.value = hashedPassword;
+                    form.submit();
+                }
+            });
+
+            function validateForm() {
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirmPassword").value;
+                const errorElement = document.getElementById("error-message");
+
+                if (password !== confirmPassword) {
+                    errorElement.textContent = "Passwords don't match!";
+                    return false;
+                } else {
+                    errorElement.textContent = "";
+                    return true;
+                }
+            }
+        </script>
+
+    </div>
+
+</body>
+</html>

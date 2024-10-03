@@ -49,6 +49,7 @@ USER appuser
 # Copy the source code into the container.
 COPY . .
 COPY ./init.sh /init.sh
+RUN chmod +x /init.sh
 
 # Expose the port that the application listens on.
 EXPOSE 8000

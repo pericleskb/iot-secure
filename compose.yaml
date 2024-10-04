@@ -2,6 +2,7 @@ services:
   python-app:
     build: .
     container_name: python-app
+    restart: always
     depends_on:
       - mariadb
     environment:

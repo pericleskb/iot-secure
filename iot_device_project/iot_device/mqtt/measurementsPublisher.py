@@ -10,7 +10,7 @@ class Publisher:
         mqttc.on_publish = on_publish
 
         mqttc.user_data_set(unacked_publish)
-        mqttc.tls_set()
+#        mqttc.tls_set()
         mqttc.connect("mqtt.eclipseprojects.io")
         print("connected")
         mqttc.loop_start()

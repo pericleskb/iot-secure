@@ -3,9 +3,9 @@ import random
 import os
 import paho.mqtt.client as mqtt
 
-class Publisher:
+class MeasurementsPublisher:
 
-    def startLoop(self):
+    def start_loop(self):
         unacked_publish = set()
         mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         mqttc.on_publish = on_publish

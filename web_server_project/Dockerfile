@@ -35,7 +35,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY . .
 COPY ./init.sh /init.sh
 RUN chmod +x /init.sh
-RUN /create-file.sh
+RUN bash create-file.sh
 
 # Expose the port that the application listens on.
 EXPOSE 8000

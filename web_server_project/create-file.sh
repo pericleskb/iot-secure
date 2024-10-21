@@ -1,3 +1,4 @@
+#!/bin/bash
 if ! [ -f ~/ssl/certificates.conf ]; then
   mkdir ~/ssl/
   touch ~/ssl/certificates.conf

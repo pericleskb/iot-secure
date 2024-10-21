@@ -1,3 +1,3 @@
-from mqqt.measurementsPublisher import Publisher
+from mqtt.measurementsPublisher import Publisher
 
 Publisher().startLoop()

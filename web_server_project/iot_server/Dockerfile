@@ -41,4 +41,4 @@ COPY . .
 # Expose the port that the application listens on.
 EXPOSE 8000
 
-CMD ["python", "mqtt/main.py"]
+CMD ["python", "main.py"]

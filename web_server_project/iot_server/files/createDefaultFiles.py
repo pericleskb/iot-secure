@@ -21,7 +21,3 @@ def create_certificates_conf_file():
         print(f"File created at {file_path}")
     else:
         print(f"File already exists at {file_path}")
-
-
-# Usage example
-create_certificates_conf_file('cert_config.txt')

@@ -4,8 +4,16 @@ def create_certificates_conf_file():
     # Get the user's home directory
     home_dir = os.path.expanduser("~")
 
+    # Full path to the directory
+    dir_path = os.path.join(home_dir, "ssl")
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+        print(f"Directory created at {dir_path}")
+
     # Full path to the file
-    file_path = os.path.join(home_dir, "certificates.conf")
+    file_path = os.path.join(dir_path, "certificates.conf")
 
     # Check if the file exists
     if not os.path.exists(file_path):

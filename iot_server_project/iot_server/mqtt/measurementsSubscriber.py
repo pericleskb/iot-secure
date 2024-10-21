@@ -37,7 +37,7 @@ mqttc.on_message = on_message
 mqttc.on_subscribe = on_subscribe
 mqttc.on_unsubscribe = on_unsubscribe
 
-mqttc.tls_set()
+#mqttc.tls_set()
 
 mqttc.user_data_set([])
 mqttc.connect("mqtt.eclipseprojects.io")

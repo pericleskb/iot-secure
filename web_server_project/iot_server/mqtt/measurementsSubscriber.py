@@ -60,17 +60,24 @@ def read_certificate_conf_file(file_path):
                 certs[key.strip()] = value.strip()
     return certs
 
+
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect
 mqttc.on_message = on_message
 mqttc.on_subscribe = on_subscribe
 mqttc.on_unsubscribe = on_unsubscribe
 
-#get OS independent home path
+# get OS independent home path
 home_dir = os.path.expanduser("~")
-#using OS independent path separator to create path /home/ssl/certificates.conf
-certs = read_certificate_conf_file(home_dir + os.sep + "ssl" + os.sep + "certificates.conf")
-mqttc.tls_set(ca_certs = certs.get("ca_certs"), certfile = certs.get("ca_certs"), keyfile= certs.get("keyfile"))
+# using OS independent path separator to create path /home/ssl/certificates.conf
+certs = read_certificate_conf_file(
+    home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
+)
+if len(certs) != 0:
+    #Certificates defined. Use ssl
+    mqttc.tls_set(ca_certs = certs.get("ca_certs"),
+                  certfile = certs.get("ca_certs"),
+                  keyfile= certs.get("keyfile"))
 
 mqttc.user_data_set([])
 mqttc.connect("mqtt.eclipseprojects.io")

@@ -17,11 +17,10 @@ class Publisher:
         # using OS independent path separator to create path /home/ssl/certificates.conf
         certs = read_certificate_conf_file(
             home_dir + os.sep + "ssl" + os.sep + "certificates.conf")
-        mqttc.tls_set(ca_certs=certs.get("ca_certs"),
-                      certfile=certs.get("ca_certs"),
-                      keyfile=certs.get("keyfile"))
+        if len(certs) != 0:
+            #Certificates defined. Use ssl
+            mqttc.tls_set(ca_certs = certs.get("ca_certs"), certfile = certs.get("ca_certs"), keyfile= certs.get("keyfile"))
 
-        mqttc.tls_set()
         mqttc.connect("mqtt.eclipseprojects.io")
         print("connected")
         mqttc.loop_start()

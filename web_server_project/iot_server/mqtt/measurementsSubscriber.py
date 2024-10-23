@@ -17,9 +17,12 @@ class MeasurementsSubscriber:
             home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
         )
         if len(certs) != 0:
+            print(certs.get("ca_certs"))
+            print(certs.get("certfile"))
+            print(certs.get("keyfile"))
             # Certificates defined. Use ssl
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
-                          certfile=certs.get("ca_certs"),
+                          certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"))
 
         mqttc.user_data_set([])

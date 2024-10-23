@@ -20,10 +20,15 @@ class MeasurementsSubscriber:
             print(certs.get("ca_certs"))
             print(certs.get("certfile"))
             print(certs.get("keyfile"))
+            print(certs.get("passwordfile"))
             # Certificates defined. Use ssl
+
+            password = get_password(certs.get("passwordfile")) if certs.get("passwordfile") else None
+
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
-                          keyfile=certs.get("keyfile"))
+                          keyfile=certs.get("keyfile"),
+                          keyfile_password=password)
 
         mqttc.user_data_set([])
         mqttc.connect("mqtt.eclipseprojects.io")
@@ -88,3 +93,8 @@ def read_certificate_conf_file(file_path):
                 # Store the key-value pair in the dictionary
                 certs[key.strip()] = value.strip()
     return certs
+
+
+def get_password(password_file):
+    with open(password_file, 'r') as file:
+        return file.readline().strip()

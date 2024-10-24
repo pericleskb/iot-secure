@@ -13,6 +13,8 @@ class MeasurementsSubscriber:
         mqttc.on_subscribe = on_subscribe
         mqttc.on_unsubscribe = on_unsubscribe
 
+        port = 1883
+
         # get OS independent home path
         home_dir = os.path.expanduser("~")
         # using OS independent path separator to create path /home/ssl/certificates.conf
@@ -33,9 +35,10 @@ class MeasurementsSubscriber:
                           keyfile=certs.get("keyfile"),
                           keyfile_password=password,
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
+            port = 8883
 
         mqttc.user_data_set([])
-        mqttc.connect("raspberrypi.local", 8883)
+        mqttc.connect("raspberrypi.local", port)
         mqttc.loop_forever()
         print(f"Received the following message: {mqttc.user_data_get()}")
 

@@ -13,6 +13,7 @@ class MeasurementsPublisher:
         mqttc.on_publish = on_publish
 
         mqttc.user_data_set(unacked_publish)
+        port = 1883
 
         # get OS independent home path
         home_dir = os.path.expanduser("~")
@@ -35,8 +36,9 @@ class MeasurementsPublisher:
                           keyfile=certs.get("keyfile"),
                           keyfile_password=password,
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
+            port = 8883
 
-        mqttc.connect("raspberrypi.local", 8883)
+        mqttc.connect("raspberrypi.local", port)
         print("connected")
         mqttc.loop_start()
         print("loop started")

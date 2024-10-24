@@ -18,10 +18,10 @@ class MeasurementsPublisher:
         # get OS independent home path
         home_dir = os.path.expanduser("~")
         # using OS independent path separator to create path /home/ssl/certificates.conf
-        certs = file_util.read_certificate_conf_file(
-            home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
-        )
-        if file_util.should_use_ssl(certs):
+        conf_file_path = home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
+
+        if file_util.should_use_ssl(conf_file_path):
+            certs = file_util.read_certificate_conf_file(conf_file_path)
             print(certs.get("ca_certs"))
             print(certs.get("certfile"))
             print(certs.get("keyfile"))

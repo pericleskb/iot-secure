@@ -36,6 +36,7 @@ def get_password(password_file):
         return file.readline().strip()
 
 def should_use_ssl(file_path):
+    # add check for if file exists
     if len(file_path) == 0:
         return False
 

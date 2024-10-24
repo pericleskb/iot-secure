@@ -16,19 +16,25 @@ class MeasurementsPublisher:
         home_dir = os.path.expanduser("~")
         # using OS independent path separator to create path /home/ssl/certificates.conf
         certs = read_certificate_conf_file(
-            home_dir + os.sep + "ssl" + os.sep + "certificates.conf")
-
+            home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
+        )
         if len(certs) != 0:
+            print(certs.get("ca_certs"))
+            print(certs.get("certfile"))
+            print(certs.get("keyfile"))
+            print(certs.get("passwordfile"))
+            # Certificates defined. Use ssl
+
             password = get_password(certs.get("passwordfile")) if certs.get(
                 "passwordfile") else None
 
-            #Certificates defined. Use ssl
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
-                          keyfile_password=password)
+                          keyfile_password=password,
+                          tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
 
-        mqttc.connect("mqtt.eclipseprojects.io")
+        mqttc.connect("raspberrypi.local", 8883)
         print("connected")
         mqttc.loop_start()
         print("loop started")
@@ -93,4 +99,3 @@ def read_certificate_conf_file(file_path):
 def get_password(password_file):
     with open(password_file, 'r') as file:
         return file.readline().strip()
-

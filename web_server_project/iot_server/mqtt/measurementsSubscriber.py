@@ -28,10 +28,11 @@ class MeasurementsSubscriber:
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
-                          keyfile_password=password)
+                          keyfile_password=password,
+                          tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
 
         mqttc.user_data_set([])
-        mqttc.connect("mqtt.eclipseprojects.io")
+        mqttc.connect("raspberrypi.local", 8883)
         mqttc.loop_forever()
         print(f"Received the following message: {mqttc.user_data_get()}")
 

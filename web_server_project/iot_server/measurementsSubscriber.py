@@ -1,6 +1,9 @@
 import os
 import paho.mqtt.client as mqtt
 
+from web_server_project.iot_server import file_util
+
+
 class MeasurementsSubscriber:
 
     def start_subscribe_loop(self):
@@ -13,17 +16,17 @@ class MeasurementsSubscriber:
         # get OS independent home path
         home_dir = os.path.expanduser("~")
         # using OS independent path separator to create path /home/ssl/certificates.conf
-        certs = read_certificate_conf_file(
+        certs = file_util.read_certificate_conf_file(
             home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
         )
-        if len(certs) != 0:
+        if file_util.should_use_ssl(certs):
             print(certs.get("ca_certs"))
             print(certs.get("certfile"))
             print(certs.get("keyfile"))
             print(certs.get("passwordfile"))
             # Certificates defined. Use ssl
 
-            password = get_password(certs.get("passwordfile")) if certs.get("passwordfile") else None
+            password = file_util.get_password(certs.get("passwordfile")) if certs.get("passwordfile") else None
 
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
@@ -66,36 +69,3 @@ def on_connect(client, userdata, flags, reason_code, properties):
         # we should always subscribe from on_connect callback to be sure
         # our subscribed is persisted across reconnections.
         client.subscribe("measurements")
-
-def read_certificate_conf_file(file_path):
-    """The paths of the SSL certificates and keys are needed to use SSL.
-        It is unsafe to store this in the code, so they must be stored
-        separately on the machine that will run the MQTT client.
-        The MQTT client needs to be provided with the path to these files.
-        Instead of using a standard path for each file, we use a standard path
-        for the configuration file and the files can be stored wherever the user
-        wishes. The format of the file should be
-        key=path
-        key=path
-    """
-
-    # Dictionary to store key-value pairs
-    certs = {}
-
-    # Open the file and read it line by line
-    with open(file_path, 'r') as file:
-        for line in file:
-            # Split the line by '=' to separate key and value
-            key_value = line.strip().split('=')
-
-            # Check if the line contains exactly two elements (key and value)
-            if len(key_value) == 2:
-                key, value = key_value
-                # Store the key-value pair in the dictionary
-                certs[key.strip()] = value.strip()
-    return certs
-
-
-def get_password(password_file):
-    with open(password_file, 'r') as file:
-        return file.readline().strip()

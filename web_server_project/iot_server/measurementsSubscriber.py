@@ -1,7 +1,7 @@
 import os
 import paho.mqtt.client as mqtt
 
-from web_server_project.iot_server import file_util
+import file_util
 
 
 class MeasurementsSubscriber:

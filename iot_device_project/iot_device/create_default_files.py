@@ -4,7 +4,7 @@ import os
 home_dir = os.path.expanduser("~")
 
 # Full path to the directoryd
-dir_path = os.path.join(home_dir, "ssl")
+dir_path = os.path.join(home_dir, "iot_secure")
 
 # Create the directory if it doesn't exist
 if not os.path.exists(dir_path):

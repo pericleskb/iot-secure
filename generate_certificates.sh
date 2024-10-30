@@ -93,6 +93,7 @@ do
     openssl req -new -key "${foldername}/${filename}_private_key".pem -out "${foldername}/ecdsa_request.csr"
     openssl x509 -req -in "${foldername}/ecdsa_request.csr" -CA $path/ca.crt -CAkey $path/ca.key -CAcreateserial -out "${foldername}/${filename}_certificate.pem" -days 365
     openssl ec -in "${foldername}/${filename}_private_key.pem" -aes256 -out "${foldername}/${filename}_private_key_encrypted.pem"
+    sudo cp $path/ca.crt $foldername/
     rm $foldername/ecdsa_request.csr $foldername/$filename_private_key.pem
 done
 

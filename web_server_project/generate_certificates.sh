@@ -94,5 +94,5 @@ done
 rm $path/ca.srl
 
 echo ""
-echo "Please set the path of your certificates in ssl/certificates.conf in your home directory for your IoT server and devices."
+echo "Please set the path of your certificates in iot_secure/certificates.conf in your home directory for your IoT server and devices."
 

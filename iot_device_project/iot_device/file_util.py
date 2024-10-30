@@ -30,11 +30,6 @@ def read_certificate_conf_file(file_path):
                 certs[key.strip()] = value.strip()
     return certs
 
-
-def get_password(password_file):
-    with open(password_file, 'r') as file:
-        return file.readline().strip()
-
 def should_use_ssl(file_path):
     # add check for if file exists
     if len(file_path) == 0:

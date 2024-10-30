@@ -25,11 +25,10 @@ class MeasurementsSubscriber:
             print(certs.get("ca_certs"))
             print(certs.get("certfile"))
             print(certs.get("keyfile"))
-            print(certs.get("password_file"))
+            print(certs.get("password"))
             # Certificates defined. Use ssl
 
-            password = file_util.get_password(certs.get("password_file")) if certs.get(
-                "passwordfile") else None
+            password = certs.get("password") if certs.get("password") else None
 
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),

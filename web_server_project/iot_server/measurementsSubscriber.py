@@ -18,17 +18,18 @@ class MeasurementsSubscriber:
         # get OS independent home path
         home_dir = os.path.expanduser("~")
         # using OS independent path separator to create path /home/ssl/certificates.conf
-        conf_file_path = home_dir + os.sep + "ssl" + os.sep + "certificates.conf"
+        conf_file_path = home_dir + os.sep + "iot_secure" + os.sep + "certificates.conf"
 
         if file_util.should_use_ssl(conf_file_path):
             certs = file_util.read_certificate_conf_file(conf_file_path)
             print(certs.get("ca_certs"))
             print(certs.get("certfile"))
             print(certs.get("keyfile"))
-            print(certs.get("passwordfile"))
+            print(certs.get("password_file"))
             # Certificates defined. Use ssl
 
-            password = file_util.get_password(certs.get("passwordfile")) if certs.get("passwordfile") else None
+            password = file_util.get_password(certs.get("password_file")) if certs.get(
+                "passwordfile") else None
 
             mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),

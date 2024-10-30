@@ -1,7 +1,7 @@
 from measurementsSubscriber import MeasurementsSubscriber
-from files.createDefaultFiles import create_certificates_conf_file
+from files import create_default_files
 
-create_certificates_conf_file()
+create_default_files
 MeasurementsSubscriber().start_subscribe_loop()
 
 

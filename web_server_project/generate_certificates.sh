@@ -4,6 +4,8 @@
 # A certificate authority will be generated which will sign the certificates
 # of the broker, the iot server and of the iot devices.
 
+python create_default_files.py
+
 read -p "You are about to generate the certificate authority and the certificates needed for your IoT network. [Enter] "
 read -p "First the CA needed to sign the certificates will be generated. [Enter] "
 
@@ -92,6 +94,8 @@ do
 done
 
 rm $path/ca.srl
+
+sudo systemctl restart mosquitto
 
 echo ""
 echo "Please set the path of your certificates in iot_secure/certificates.conf in your home directory for your IoT server and devices."

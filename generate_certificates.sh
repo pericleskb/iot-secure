@@ -46,6 +46,9 @@ openssl ec -in $folderpath/broker_private_key.pem -aes256 -out $folderpath/broke
 #move broker's encrypted key and certificate to eclipse's mosquitto appropriate directory
 sudo mv $folderpath/broker_certificate.pem $folderpath/broker_private_key_encrypted.pem /etc/mosquitto/certs/
 
+#change permissions
+sudo chmod 644 /etc/mosquitto/certs/broker_private_key_encrypted.pem
+
 # Check if files moved successfully
 if [ $? -eq 0 ]; then
     echo ""
@@ -90,12 +93,12 @@ do
     openssl req -new -key "${foldername}/${filename}_private_key".pem -out "${foldername}/ecdsa_request.csr"
     openssl x509 -req -in "${foldername}/ecdsa_request.csr" -CA $path/ca.crt -CAkey $path/ca.key -CAcreateserial -out "${foldername}/${filename}_certificate.pem" -days 365
     openssl ec -in "${foldername}/${filename}_private_key.pem" -aes256 -out "${foldername}/${filename}_private_key_encrypted.pem"
-    rm ${foldername}/ecdsa_request.csr $foldername}/$filename_private_key.pem
+    rm $foldername/ecdsa_request.csr $foldername/$filename_private_key.pem
 done
 
 rm $path/ca.srl
 
-sudo systemctl restart mosquitto
+sudo systemctl stop mosquitto
 
 echo ""
 echo "Please set the path of your certificates in iot_secure/certificates.conf in your home directory for your IoT server and devices."

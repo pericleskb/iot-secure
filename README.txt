@@ -49,15 +49,18 @@ Follow the instuctions below to set up the project.
    You can use the path they were generated in or move them elsewhere.
    Also fill in the PEM password you used during the certificate generation process.
     
-# Run web server
-8. Run the run_web_server.sh bash script located in iot-secure/web_server_project
+# Start mosquitto broker from terminal
+8. sudo mosquitto -c /etc/mosquitto/mosquitto.conf
+   You can also monitor all the logs of the broker by subscribing to the all topic with "mosquitto_sub -h raspberrypi.local -t "#" -v"
+    
+# Install and run the web server and MariaDB using docker and provide PEM password
+9. Go to iot-secure/web_server_project and run "sudo docker compose up --build"
 
 # Install prerequisites for IoT Server
-9. Run install.sh located in iot-secure/web_server_project/iot_server
+10. Execute install.sh located in iot-secure/web_server_project/iot_server
 
 # Run IoT Server
-10. Run run.sh located in iot-secure/web_server_project/iot_server
-
+11. Execute run.sh located in iot-secure/web_server_project/iot_server
 
 ## Setting up IoT devices ##
 For each IoT device that will run on raspberrypi device you need to do the following.

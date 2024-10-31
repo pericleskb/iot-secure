@@ -2,6 +2,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth import  login
+from django.http import JsonResponse
 
 from .models import User
 
@@ -27,11 +29,14 @@ def login(request):
         password = request.POST.get('password')
         user = User.objects.filter(username=username, password=password)
         if user:
-            return HttpResponseRedirect(reverse("web_server:settings"))
+            #login
+            return JsonResponse(
+                {'status': 'success', 'message': 'Login successful'})
         else:
-            messages.error(request, "Invalid username or password")
-    else:
-        return render(request, "web_server/login.html")
+            return JsonResponse(
+                {'status': 'error', 'message': 'Invalid username or password'})
+    return JsonResponse(
+        {'status': 'error', 'message': 'Invalid request method'})
 
 def settings(request):
     return render(request, "web_server/settings.html")

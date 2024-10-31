@@ -96,13 +96,32 @@
             }
 
             const form = document.getElementById('login-form');
+
             form.addEventListener('submit', async function (event) {
                 event.preventDefault();  // Prevent the default form submission
                 const passwordField = document.getElementById('password');
                 const hashedPassword = await hashPassword(passwordField.value);
                 passwordField.value = hashedPassword;  // Replace the password with the hash
-                form.submit();  // Submit the form with the hashed password
+                //send Ajax request to be able to get back json responses
+                fetch("/login-ajax/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"  // Use Django’s CSRF token for security
+                    },
+                    body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        window.location.href = "/settings/";  // Redirect on successful login
+                    } else {
+                        document.getElementById("error-message").textContent = data.message;  // Show error message
+                    }
+                })
+                .catch(error => console.error("Error:", error));
             });
+
         </script>
 
     </div>

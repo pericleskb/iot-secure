@@ -35,8 +35,7 @@ def login(request):
         else:
             return JsonResponse(
                 {'status': 'error', 'message': 'Invalid username or password'})
-    return JsonResponse(
-        {'status': 'error', 'message': 'Invalid request method'})
+    return render(request, "web_server/login.html")
 
 def settings(request):
     return render(request, "web_server/settings.html")

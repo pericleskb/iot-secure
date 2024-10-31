@@ -43,3 +43,24 @@ def login_ajax(request):
 
 def settings(request):
     return render(request, "web_server/settings.html")
+
+def get_options(request):
+    # Define your data. This can be dynamic, fetched from a database, etc.
+    options = [
+        {
+            "optionName": "Option 1",
+            "optionTitle": "Title for Option 1",
+            "optionDescription": "Description for Option 1"
+        },
+        {
+            "optionName": "Option 2",
+            "optionTitle": "Title for Option 2",
+            "optionDescription": "Description for Option 2"
+        },
+        {
+            "optionName": "Option 3",
+            "optionTitle": "Title for Option 3",
+            "optionDescription": "Description for Option 3"
+        }
+    ]
+    return JsonResponse(options, safe=False)

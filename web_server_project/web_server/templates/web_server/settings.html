@@ -1,1 +1,120 @@
-<h1>Settings page!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Page with Interactive Content</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header, footer {
+            background-color: #0056b3;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        main {
+            display: flex;
+            flex-grow: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .list-section, .text-section {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            flex: 1;
+        }
+
+        .list-section {
+            width: 40%;
+        }
+
+        .text-section h2 {
+            width: 60%;
+            margin-top: 0;
+        }
+
+        .footer-text {
+            margin: 0;
+        }
+
+        /* Radio button styling */
+        .radio-button {
+            cursor: pointer;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Settings page</h1>
+    </header>
+
+    <main>
+        <!-- List of values with radio buttons -->
+        <section class="list-section">
+            <h2>Select an Option</h2>
+            <div id="options-container"></div>
+        </section>
+
+        <!-- Text area that updates based on selection -->
+        <section class="text-section">
+            <h2 id="option-title">Details</h2>
+            <p id="text-display">Select an option to see the content here.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-text">IoT Secure</p>
+    </footer>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            fetch('/api/options')
+                .then(response => response.json())
+                .then(data => populateOptions(data))
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+        // Populate options in the list section
+        function populateOptions(options) {
+            const optionsContainer = document.getElementById('options-container');
+
+            options.forEach((option, index) => {
+                const label = document.createElement('label');
+                label.classList.add('radio-button');
+
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'option';
+                radio.value = index;
+                radio.onclick = () => updateText(option.optionTitle, option.optionDescription);
+
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(option.optionName));
+
+                optionsContainer.appendChild(label);
+            });
+        }
+
+        // Update text section with selected option's details
+        function updateText(title, description) {
+            document.getElementById('option-title').innerText = title;
+            document.getElementById('text-display').innerText = description;
+        }
+    </script>
+
+</body>
+</html>

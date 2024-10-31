@@ -1,8 +1,8 @@
 from enum import Enum
 
 class CipherSuites(Enum):
-    V1_2_SECURE = "ECDHE-RSA-AES256-GCM-SHA384"
-    V1_2_PERFORMANCE = "ECDHE-RSA-AES128-GCM-SHA256"
+    V1_2_SECURE = "ECDHE-ECDSA-AES256-GCM-SHA384"
+    V1_2_PERFORMANCE = "ECDHE-ECDSA-AES128-GCM-SHA256"
     NO_CRYPTO_HARDWARE = "ECDHE-ECDSA-CHACHA20-POLY1305"
 
 # On small resources constrained devices like microcontrollers, their CPU sometimes

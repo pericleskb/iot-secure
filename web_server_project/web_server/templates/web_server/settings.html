@@ -71,7 +71,8 @@
 
         <!-- Text area that updates based on selection -->
         <section class="text-section">
-            <h2 id="option-title">Details</h2>
+            <h2 id="option-code"></h2>
+            <h2 id="option-description"></h2>
             <p id="text-display">Select an option to see the content here.</p>
         </section>
     </main>
@@ -100,19 +101,21 @@
                 radio.type = 'radio';
                 radio.name = 'option';
                 radio.value = index;
-                radio.onclick = () => updateText(option.optionTitle, option.optionDescription);
+                radio.onclick = () => updateText(option.option_code, option_description, option.option_text);
 
                 label.appendChild(radio);
-                label.appendChild(document.createTextNode(option.optionName));
+                label.appendChild(document.createTextNode(option.option_code));
+                label.appendChild(document.createTextNode(option.option_description));
 
                 optionsContainer.appendChild(label);
             });
         }
 
         // Update text section with selected option's details
-        function updateText(title, description) {
-            document.getElementById('option-title').innerText = title;
-            document.getElementById('text-display').innerText = description;
+        function updateText(code, description, text) {
+            document.getElementById('option-code').innerText = code;
+            document.getElementById('option-description').innerText = description;
+            document.getElementById('text-display').innerText = text;
         }
     </script>
 

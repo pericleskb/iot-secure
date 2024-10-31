@@ -1,11 +1,9 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib import messages
-from django.contrib.auth import  login
 from django.http import JsonResponse
 
-from .models import User
+from .models import User, SecurityOptions
 
 
 def home(request):
@@ -32,7 +30,6 @@ def login_ajax(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = User.objects.filter(username=username, password=password)
-        print
         if user:
             #login
             return JsonResponse(
@@ -45,22 +42,5 @@ def settings(request):
     return render(request, "web_server/settings.html")
 
 def get_options(request):
-    # Define your data. This can be dynamic, fetched from a database, etc.
-    options = [
-        {
-            "optionName": "Option 1",
-            "optionTitle": "Title for Option 1",
-            "optionDescription": "Description for Option 1"
-        },
-        {
-            "optionName": "Option 2",
-            "optionTitle": "Title for Option 2",
-            "optionDescription": "Description for Option 2"
-        },
-        {
-            "optionName": "Option 3",
-            "optionTitle": "Title for Option 3",
-            "optionDescription": "Description for Option 3"
-        }
-    ]
+    options = SecurityOptions.objects.all()
     return JsonResponse(options, safe=False)

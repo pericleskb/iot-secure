@@ -7,6 +7,7 @@ from django.http import JsonResponse
 
 from .models import User
 
+
 def home(request):
     if User.objects.exists():
         return HttpResponseRedirect(reverse("web_server:login"))
@@ -23,11 +24,15 @@ def register(request):
     else:
         return render(request, "web_server/register.html")
 
-def login(request):
+def login(request): 
+    return render(request, "web_server/login.html")
+
+def login_ajax(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = User.objects.filter(username=username, password=password)
+        print
         if user:
             #login
             return JsonResponse(
@@ -35,7 +40,6 @@ def login(request):
         else:
             return JsonResponse(
                 {'status': 'error', 'message': 'Invalid username or password'})
-    return render(request, "web_server/login.html")
 
 def settings(request):
     return render(request, "web_server/settings.html")

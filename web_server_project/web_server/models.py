@@ -24,4 +24,4 @@ class SelectedOption(models.Model):
     )
 
     def __str__(self):
-        return f"Selected Option: {self.option.name}"
+        return f"Selected Option: {self.option.option_code}"

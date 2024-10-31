@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
+from django.core import serializers
 
 from .models import User, SecurityOptions
 
@@ -42,5 +43,6 @@ def settings(request):
     return render(request, "web_server/settings.html")
 
 def get_options(request):
-    options = SecurityOptions.objects.all()
-    return JsonResponse(options, safe=False)
+    options = SecurityOptions.objects.all().values()
+    data = list(options)
+    return JsonResponse(data, safe=False)

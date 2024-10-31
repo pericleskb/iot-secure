@@ -72,7 +72,7 @@
         <!-- Text area that updates based on selection -->
         <section class="text-section">
             <h2 id="option-code"></h2>
-            <h2 id="option-description"></h2>
+            <h3 id="option-description"></h3>
             <p id="text-display">Select an option to see the content here.</p>
         </section>
     </main>
@@ -104,7 +104,7 @@
                 radio.onclick = () => updateText(option.option_code, option_description, option.option_text);
 
                 label.appendChild(radio);
-                label.appendChild(document.createTextNode(option.option_code));
+                label.appendChild(document.createTextNode(option.option_code+" - "));
                 label.appendChild(document.createTextNode(option.option_description));
 
                 optionsContainer.appendChild(label);

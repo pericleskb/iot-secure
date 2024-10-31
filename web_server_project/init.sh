@@ -4,9 +4,6 @@
 # Exit the script if any command fails
 set -e
 
-#run initial db population
-python manage.py populate_db
-
 # Run database migrations
 python manage.py makemigrations web_server
 python manage.py migrate

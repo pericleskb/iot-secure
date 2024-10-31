@@ -12,7 +12,7 @@ class Command(BaseCommand):
 			SecurityOptions.objects.bulk_create([
 				SecurityOptions(option_code="ECDHE-ECDSA-AES256-GCM-SHA384", option_description="Best for Security", option_text="This is an option used for blah blah<br><br>Also blah blah"),
 				SecurityOptions(option_code="ECDHE-ECDSA-AES128-GCM-SHA256", option_description="Best for Performance", option_text="This is an option used for blah blah<br><br>Also blah blah"),
-				SecurityOptions(option_code="ECDHE-ECDSA-CHACHA20-POLY1305", option_description="Best for Mobile Devices", option_text="This is an option used for blah blah<br><br>Also blah blah"),  
+				SecursityOptions(option_code="ECDHE-ECDSA-CHACHA20-POLY1305", option_description="Best for Mobile Devices", option_text="This is an option used for blah blah<br><br>Also blah blah"),
 			])
 			self.stdout.write(self.style.SUCCESS("Initial data added to DB"))
 		else:

@@ -7,12 +7,14 @@ import file_util
 
 class MeasurementsPublisher:
 
+    def __init__(self):
+        self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+
     def start_loop(self):
         unacked_publish = set()
-        mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-        mqttc.on_publish = on_publish
+        self.mqttc.on_publish = on_publish
 
-        mqttc.user_data_set(unacked_publish)
+        self.mqttc.user_data_set(unacked_publish)
         port = 1883
 
         # get OS independent home path
@@ -30,7 +32,7 @@ class MeasurementsPublisher:
 
             password = certs.get("password") if certs.get("password") else None
 
-            mqttc.tls_set(ca_certs=certs.get("ca_certs"),
+            self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
                           keyfile_password=password,
@@ -38,19 +40,23 @@ class MeasurementsPublisher:
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883
 
-        mqttc.connect("raspberrypi.local", port)
+        self.mqttc.connect("raspberrypi.local", port)
         print("connected")
-        mqttc.loop_start()
+        self.mqttc.loop_start()
         print("loop started")
 
         while True:
             # Generate a random float between 30 and 80
             temperature = random.uniform(30.0, 80.0)
-            msg_info = mqttc.publish("measurements", temperature, qos=1)
+            msg_info = self.mqttc.publish("measurements", temperature, qos=1)
             print(f"sent message {temperature}")
             unacked_publish.add(msg_info.mid)
             msg_info.wait_for_publish()
             time.sleep(5)
+
+
+        def stop_loop(self):
+            self.mqttc.loop_stop()
 
 
 def on_publish(client, userdata, mid, reason_code, properties):

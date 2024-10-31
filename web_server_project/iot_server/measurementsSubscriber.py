@@ -3,15 +3,17 @@ import paho.mqtt.client as mqtt
 
 import file_util
 
-
 class MeasurementsSubscriber:
 
+    def __init__(self):
+        self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        
+
     def start_subscribe_loop(self):
-        mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-        mqttc.on_connect = on_connect
-        mqttc.on_message = on_message
-        mqttc.on_subscribe = on_subscribe
-        mqttc.on_unsubscribe = on_unsubscribe
+        self.mqttc.on_connect = on_connect
+        self.mqttc.on_message = on_message
+        self.mqttc.on_subscribe = on_subscribe
+        self.mqttc.on_unsubscribe = on_unsubscribe
 
         port = 1883
 
@@ -30,7 +32,7 @@ class MeasurementsSubscriber:
 
             password = certs.get("password") if certs.get("password") else None
 
-            mqttc.tls_set(ca_certs=certs.get("ca_certs"),
+            self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
                           keyfile_password=password,
@@ -38,12 +40,18 @@ class MeasurementsSubscriber:
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883
 
-        mqttc.user_data_set([])
-        mqttc.connect("raspberrypi.local", port)
-        mqttc.loop_forever()
-        print(f"Received the following message: {mqttc.user_data_get()}")
+        self.mqttc.user_data_set([])
+        self.mqttc.connect("raspberrypi.local", port)
+        self.mqttc.loop_forever()
+        print(f"Received the following message: {self.mqttc.user_data_get()}")
 
-def on_subscribe(client, userdata, mid, reason_code_list, properties):
+
+    def stop_loop(self):
+        self.mqttc.loop_stop()
+
+
+
+def on_subscribe(self, userdata, mid, reason_code_list, properties):
     # Since we subscribed only for a single channel, reason_code_list contains
     # a single entry
     if reason_code_list[0].is_failure:

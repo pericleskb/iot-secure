@@ -1,5 +1,6 @@
 from measurementsSubscriber import MeasurementsSubscriber
 
-MeasurementsSubscriber().start_subscribe_loop()
+measurement_subscriber = MeasurementsSubscriber()
+measurement_subscriber.start_subscribe_loop()
 
 

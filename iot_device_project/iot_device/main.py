@@ -1,3 +1,4 @@
 from measurementsPublisher import MeasurementsPublisher
 
-MeasurementsPublisher().start_loop()
+measurement_publisher = MeasurementsPublisher()
+measurement_publisher.start_loop()

@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib import messages
 
 from .models import User
 
@@ -24,7 +25,11 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        return HttpResponseRedirect(reverse("web_server:settings"))
+        user = User.objects.filter(username=username, password=password)
+        if user:
+            return HttpResponseRedirect(reverse("web_server:settings"))
+        else:
+            messages.error(request, "Invalid username or password")
     else:
         return render(request, "web_server/login.html")
 

@@ -101,7 +101,7 @@
                 radio.type = 'radio';
                 radio.name = 'option';
                 radio.value = index;
-                radio.onclick = () => updateText(option.option_code, option_description, option.option_text);
+                radio.onclick = () => updateText(option.option_code, option.option_description, option.option_text);
 
                 label.appendChild(radio);
                 label.appendChild(document.createTextNode(option.option_code+" - "));
@@ -113,9 +113,10 @@
 
         // Update text section with selected option's details
         function updateText(code, description, text) {
-            document.getElementById('option-code').innerText = code;
-            document.getElementById('option-description').innerText = description;
-            document.getElementById('text-display').innerText = text;
+            console.log(code);
+            document.getElementById('option-code').innerHTML = code;
+            document.getElementById('option-description').innerHTML = description;
+            document.getElementById('text-display').innerHTML = text;
         }
     </script>
 

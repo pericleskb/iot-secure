@@ -72,6 +72,10 @@
             display: block;
             margin-bottom: 10px;
         }
+        
+        .notification-message {
+            visibility: hidden;
+        }
     </style>
 </head>
 <body>
@@ -86,8 +90,9 @@
             <section class="list-section">
                 <h2>Select an Option</h2>
                 <div id="options-container"></div>
+                <p  id="notification_message" class="notification-message"></p>
             </section>
-            <button class="save-button">Save preferences</button>
+            <button type="button" class="save-button" onclick="savePreferences()">Save preferences</button>
         </section>
         
 
@@ -108,26 +113,31 @@
             fetch('/api/options')
                 .then(response => response.json())
                 .then(data => populateOptions(data))
-                .catch(error => console.error('Error fetching data:', error));
+                .catch(error => console.error('Error fetching data:', error))
         });
         
 
         // Populate options in the list section
-        function populateOptions(options) {
+        function populateOptions(data) {
+            console.log(data)
             const optionsContainer = document.getElementById('options-container');
 
-            options.forEach((option, index) => {
+            data.forEach((option, index) => {
                 const label = document.createElement('label');
                 label.classList.add('radio-button');
 
                 const radio = document.createElement('input');
                 radio.type = 'radio';
                 radio.name = 'option';
-                radio.value = index;
-                radio.onclick = () => updateText(option.option_code, option.option_description, option.option_text);
+                radio.value = option.option_code;
+                radio.onclick = () => {
+                    hideMessage();
+                    updateText(option.option_code, option.option_description, option.option_text);
+                }
+                radio.checked = option.is_selected;
 
                 label.appendChild(radio);
-                label.appendChild(document.createTextNode(option.option_code+" - "));
+                label.appendChild(document.createTextNode(option.option_code + " - "));
                 label.appendChild(document.createTextNode(option.option_description));
 
                 optionsContainer.appendChild(label);
@@ -136,10 +146,84 @@
 
         // Update text section with selected option's details
         function updateText(code, description, text) {
-            console.log(code);
             document.getElementById('option-code').innerHTML = code;
             document.getElementById('option-description').innerHTML = description;
             document.getElementById('text-display').innerHTML = text;
+        }
+
+        function savePreferences() {
+            const selectedRadio = document.querySelector('input[name="option"]:checked');
+            
+            if (!selectedRadio) {
+                showErrorMessage("No option selected");
+                return;
+            }
+            
+            hideMessage();
+            console.log(selectedRadio.value);
+            const payload = {
+                selected_cipher: selectedRadio.value,
+            };
+
+            // Make the POST request
+            const csrftoken = getCookie('csrftoken');
+            fetch('/api/save-preferences/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('HTTP response error: ' + response);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Show the notification message
+                showMessage("Your preferences have been saved!");
+            })
+            .catch(error => {
+                console.error('Error saving preferences:', error);
+                showErrorMessage("Failed to save preferences.");
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        function hideMessage() {
+            notification_message = document.getElementById("notification_message");
+            notification_message.style.visibility = "hidden";
+        }
+        
+        function showErrorMessage(message) {
+            notification_message = document.getElementById("notification_message");
+            notification_message.textContent = message;
+            notification_message.style.color = "red";
+            notification_message.style.visibility = "visible";
+        }
+        
+        function showMessage(message) {
+            notification_message = document.getElementById("notification_message");
+            notification_message.textContent = message;
+            notification_message.style.color = "green";
+            notification_message.style.visibility = "visible";
         }
     </script>
 

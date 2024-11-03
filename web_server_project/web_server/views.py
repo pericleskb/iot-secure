@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
 from django.core import serializers
+import json
 
 from .models import User, SecurityOptions
 
@@ -46,3 +47,26 @@ def get_options(request):
     options = SecurityOptions.objects.all().values()
     data = list(options)
     return JsonResponse(data, safe=False)
+    
+def save_preferences(request):
+    if request.method == "POST":
+        data = json.loads(request.body);
+        
+        if not "selected_cipher" in data: 
+            return JsonResponse({"error" : "Invalid request body"}, status=400, safe=False)
+            
+        new_option = SecurityOptions.objects.filter(option_code=data["selected_cipher"]).first()
+        
+        if new_option is None:
+            return JsonResponse({"error" : "Selected cipher not found on the server"}, status=500, safe=False)
+            
+        instances = SecurityOptions.objects.all()
+        for instance in instances:
+            print(instance.option_code)
+            print(new_option)
+            instance.is_selected = instance.option_code == new_option.option_code
+            instance.save()
+        
+        return JsonResponse({"message" : "Preference saved"}, status=200, safe=False)
+    
+    return JsonResponse({"error" : "Invalid request"}, status=400, safe=False)

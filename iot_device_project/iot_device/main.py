@@ -1,5 +1,5 @@
-from measurements_publisher import MeasurementsPublisher
-from cipher_subscriber import CipherSubscriber
+from mqtt.measurements_publisher import MeasurementsPublisher
+from mqtt.cipher_subscriber import CipherSubscriber
 
 measurement_publisher = MeasurementsPublisher()
 measurement_publisher.start_loop()

@@ -1,4 +1,6 @@
-def read_certificate_conf_file(file_path):
+import os
+
+def read_certificate_conf_file():
     """The paths of the SSL certificates and keys are needed to use SSL.
         It is unsafe to store this in the code, so they must be stored
         separately on the machine that will run the MQTT client.
@@ -9,6 +11,11 @@ def read_certificate_conf_file(file_path):
         key=path
         key=path
     """
+
+    # get OS independent home path
+    home_dir = os.path.expanduser("~")
+    # using OS independent path separator to create path /home/ssl/certificates.conf
+    file_path = home_dir + os.sep + "iot_secure" + os.sep + "certificates.conf"
 
     # Dictionary to store key-value pairs
     certs = {}
@@ -30,7 +37,11 @@ def read_certificate_conf_file(file_path):
                 certs[key.strip()] = value.strip()
     return certs
 
-def should_use_ssl(file_path):
+def should_use_ssl():
+    # get OS independent home path
+    home_dir = os.path.expanduser("~")
+    # using OS independent path separator to create path /home/ssl/certificates.conf
+    file_path = home_dir + os.sep + "iot_secure" + os.sep + "certificates.conf"
     # add check for if file exists
     if len(file_path) == 0:
         return False

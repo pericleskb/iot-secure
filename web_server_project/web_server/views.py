@@ -2,10 +2,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
-from django.core import serializers
 import json
 
 from .models import User, SecurityOptions
+from .sockets import cipher_selection_socket_update
+from .sockets.cipher_selection_socket_update import update_cipher
 
 
 def home(request):
@@ -66,7 +67,8 @@ def save_preferences(request):
             print(new_option)
             instance.is_selected = instance.option_code == new_option.option_code
             instance.save()
-        
+
+        update_cipher(new_option.option_code)
         return JsonResponse({"message" : "Preference saved"}, status=200, safe=False)
     
     return JsonResponse({"error" : "Invalid request"}, status=400, safe=False)

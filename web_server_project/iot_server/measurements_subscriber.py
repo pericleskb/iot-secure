@@ -17,18 +17,9 @@ class MeasurementsSubscriber:
 
         port = 1883
 
-        # get OS independent home path
-        home_dir = os.path.expanduser("~")
-        # using OS independent path separator to create path /home/ssl/certificates.conf
-        conf_file_path = home_dir + os.sep + "iot_secure" + os.sep + "certificates.conf"
-
-        if file_util.should_use_ssl(conf_file_path):
-            certs = file_util.read_certificate_conf_file(conf_file_path)
-            print(certs.get("ca_certs"))
-            print(certs.get("certfile"))
-            print(certs.get("keyfile"))
-            print(certs.get("password"))
+        if file_util.should_use_ssl():
             # Certificates defined. Use ssl
+            certs = file_util.read_certificate_conf_file()
 
             password = certs.get("password") if certs.get("password") else None
 

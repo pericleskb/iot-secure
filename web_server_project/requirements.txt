@@ -1,4 +1,4 @@
 Django==5.1rc1
 mysqlclient==2.2.4
-mysql-connector-python==9.0.0
+mariadb==1.1.10
 paho-mqtt==2.1.0

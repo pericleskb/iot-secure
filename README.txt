@@ -56,10 +56,10 @@ Follow the instuctions below to set up the project.
 9. Go to iot-secure/web_server_project and run "sudo docker compose up --build"
 
 # Install prerequisites for IoT Server
-10. Execute install.sh located in iot-secure/web_server_project/iot_server
+10. Navigate to iot-secure/web_server_project/iot_server/scripts through the command line and execute install.sh located in 
 
 # Run IoT Server
-11. Execute run.sh located in iot-secure/web_server_project/iot_server
+11. Execute run.sh located in the same folder
 
 ## Setting up IoT devices ##
 For each IoT device that will run on raspberrypi device you need to do the following.
@@ -67,9 +67,9 @@ For each IoT device that will run on raspberrypi device you need to do the follo
 # Installing
 1. Copy the code from iot-secure/iot_device_project/iot_device in the machine
 2. Copy the device's certificates generated for this specific device, from the server to the device in your selected folder
-3. Run the install.sh bash script located in iot-secure/iot_device_project/iot_device
+3. Run the install.sh bash script located in iot-secure/iot_device_project/iot_device/scripts
 4. Edit configuratio file in home dir ~/iot_secure/certificates.conf as you did for the IoT Server
 
 # Running
-5. bash run.sh
+5. Run "bash run.sh" from the scripts directory
 

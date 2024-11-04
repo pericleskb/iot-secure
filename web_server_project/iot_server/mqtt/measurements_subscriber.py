@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 
-from ..files import file_util
+from files import file_util
 
 class MeasurementsSubscriber:
 

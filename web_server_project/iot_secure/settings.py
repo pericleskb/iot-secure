@@ -80,8 +80,11 @@ DATABASES = {
         "NAME": "mydb",
         "USER": "admin_user",
         "PASSWORD": "root123",
-        "HOST": "mariadb",
+        "HOST": "127.0.0.1",
         "PORT": "3306",
+        'OPTIONS': {
+            'init_command': 'ALTER DATABASE mydb CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci',
+        },
     }
 }
 

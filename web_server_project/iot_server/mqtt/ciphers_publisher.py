@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 
-from ..files import file_util
+from files import file_util
 
 def send_ciphers(cipher):
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)

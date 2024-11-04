@@ -6,7 +6,7 @@ services:
     depends_on:
       - mariadb
     environment:
-      MYSQL_HOST: mariadb
+      MYSQL_HOST: 127.0.0.1
       MYSQL_PORT: 3306
       MYSQL_USER: admin_user
       MYSQL_PASSWORD: root123
@@ -15,8 +15,7 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    networks:
-      - app-network
+    network_mode: "host"
 
   mariadb:
     image: mariadb:latest
@@ -31,12 +30,7 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+    network_mode: "host"
 
 volumes:
   mariadb_data:

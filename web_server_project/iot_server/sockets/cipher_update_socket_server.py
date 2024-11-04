@@ -1,8 +1,6 @@
 import socket
 
-import ciphers_publisher
-from web_server_project.iot_server.ciphers_publisher import send_ciphers
-
+from web_server_project.iot_server.mqtt.ciphers_publisher import send_ciphers
 
 class SocketServer:
 

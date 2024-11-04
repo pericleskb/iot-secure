@@ -1,6 +1,6 @@
 The goal of this project is to create a secure and versatile IoT system
 where the user is in control of the security settings of the network.
-The project provide the user with a web dashboard where the user can 
+The project provides the user with a web dashboard where the user can 
 control the system's security settings and change them on the fly.
 
 This project consists of the following software modules:

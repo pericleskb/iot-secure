@@ -53,8 +53,9 @@ class CipherSubscriber:
         self.measurements_publisher_thread.start()
         print("3")
 
-    def stop_measurement_thread(self):
-        self.measurement_publisher.stop_loop()
+    def stop_measurements(self):
+        if self.measurement_publisher is not None:
+            self.measurement_publisher.stop_loop()
 
     def start_measurements(self):
         self.measurement_publisher = MeasurementsPublisher(self.active_cipher)
@@ -76,7 +77,7 @@ class CipherSubscriber:
         # if the current cipher suite is not supported, stop sending measurements
         if not is_cipher_suite(message.payload):
             self.active_cipher = None
-            self.stop_measurement_thread()
+            self.stop_measurements()
             return
 
         # if the cipher contained in the message is different from the active
@@ -84,7 +85,7 @@ class CipherSubscriber:
         if message.payload != self.active_cipher:
             self.stop_measurements()
             self.active_cipher = message.payload
-            self.start_measurements()
+            self.start_measurement_thread()
 
     def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
         # Since we subscribed only for a single channel, reason_code_list contains

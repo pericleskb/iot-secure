@@ -1,9 +1,9 @@
 import threading
 import paho.mqtt.client as mqtt
 
-from iot_device_project.iot_device.files import file_util
-from iot_device_project.iot_device.CipherSuites import is_cipher_suite
-from measurements_publisher import MeasurementsPublisher
+from files import file_util
+from CipherSuites import is_cipher_suite
+from mqtt.measurements_publisher import MeasurementsPublisher
 
 class CipherSubscriber:
 

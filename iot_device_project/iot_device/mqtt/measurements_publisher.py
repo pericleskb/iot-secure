@@ -2,7 +2,7 @@ import time
 import random
 import paho.mqtt.client as mqtt
 
-from iot_device_project.iot_device.files import file_util
+from files import file_util
 
 class MeasurementsPublisher:
 

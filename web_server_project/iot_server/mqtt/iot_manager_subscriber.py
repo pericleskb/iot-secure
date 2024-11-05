@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 
 from files import file_util
-from ciphers_publisher import send_cipher
+from mqtt.ciphers_publisher import send_cipher
 
 """
     This class implements an MQTT subscriber and will handle all the
@@ -14,8 +14,9 @@ from ciphers_publisher import send_cipher
 """
 class IotManagerSubscriber:
 
-    def __init__(self):
+    def __init__(self, cipher):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        self.cipher = cipher
 
     def start_subscribe_loop(self):
         self.mqttc.on_connect = self.on_connect
@@ -35,7 +36,7 @@ class IotManagerSubscriber:
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
                           keyfile_password=password,
-                          ciphers="ECDHE-ECDSA-AES128-GCM-SHA256",
+                          ciphers=self.cipher,
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883
 
@@ -47,7 +48,7 @@ class IotManagerSubscriber:
     def stop_loop(self):
         self.mqttc.loop_stop()
 
-    def on_message(client, userdata, message):
+    def on_message(self, self1, client, userdata, message):
         # userdata is the structure we choose to provide, here it's a list()
         userdata.append(message.payload)
         # if a device is connected, publish the selected cipher
@@ -59,28 +60,25 @@ class IotManagerSubscriber:
             print(f"received measurement: {message.payload}")
         #todo save on db
 
-    def on_subscribe(self, userdata, mid, reason_code_list, properties):
-        # Since we subscribed only for a single channel, reason_code_list contains
-        # a single entry
+    def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
+        #todo check for other reason codes
         if reason_code_list[0].is_failure:
             print(f"Broker rejected you subscription: {reason_code_list[0]}")
         else:
             print(f"Broker granted the following QoS: {reason_code_list[0].value}")
 
-    def on_unsubscribe(client, userdata, mid, reason_code_list, properties):
-        # Be careful, the reason_code_list is only present in MQTTv5.
-        # In MQTTv3 it will always be empty
+    def on_unsubscribe(self, self1, client, userdata, mid, reason_code_list, properties):
         if len(reason_code_list) == 0 or not reason_code_list[0].is_failure:
             print("unsubscribe succeeded (if SUBACK is received in MQTTv3 it success)")
         else:
             print(f"Broker replied with failure: {reason_code_list[0]}")
         client.disconnect()
 
-    def on_connect(client, userdata, flags, reason_code, properties):
+    def on_connect(self, client, userdata, flags, reason_code, properties):
         if reason_code.is_failure:
             print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
         else:
             # we should always subscribe from on_connect callback to be sure
             # our subscribed is persisted across reconnections.
-            client.subscribe("device_connected")
             client.subscribe("measurements")
+            client.subscribe("device_connected")

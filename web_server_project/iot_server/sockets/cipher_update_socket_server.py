@@ -1,6 +1,6 @@
 import socket
 
-from mqtt.ciphers_publisher import send_ciphers
+from mqtt.ciphers_publisher import send_cipher
 
 """
     The SocketServer receives messages about changes the user makes on the 

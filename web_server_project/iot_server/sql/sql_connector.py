@@ -20,4 +20,4 @@ def get_selected_option():
         return None
     cursor.close()
     connection.close()
-    return option
+    return option[0]

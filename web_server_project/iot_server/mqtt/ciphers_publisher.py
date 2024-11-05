@@ -5,7 +5,7 @@ from sql.sql_connector import get_selected_option
 
 def send_cipher():
     # read selected security cipher suite from db
-    selected_option = get_selected_option()
+    selected_cipher= get_selected_option()
 
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     unacked_publish = set()
@@ -23,7 +23,7 @@ def send_cipher():
                            certfile=certs.get("certfile"),
                            keyfile=certs.get("keyfile"),
                            keyfile_password=password,
-                           ciphers="ECDHE-ECDSA-AES128-GCM-SHA256",
+                           ciphers=selected_cipher,
                            tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
         port = 8883
 

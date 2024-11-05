@@ -3,9 +3,13 @@ import threading
 from mqtt.iot_manager_subscriber import IotManagerSubscriber
 from mqtt.ciphers_publisher import send_cipher
 from sockets.cipher_update_socket_server import SocketServer
+from sql.sql_connector import get_selected_option
 
+selected_option = get_selected_option()
+
+#todo on change of cipher, we need to stop iotmanagersubscriber and restart
 def start_iot_manager_subscriber():
-	measurement_subscriber = IotManagerSubscriber()
+	measurement_subscriber = IotManagerSubscriber(selected_option)
 	measurement_subscriber.start_subscribe_loop()
 
 def start_socket_server():

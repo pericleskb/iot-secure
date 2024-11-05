@@ -12,7 +12,7 @@ class CipherSubscriber:
         # We wait to receive the current active cipher before
         # sending measurements
         self.active_cipher = None
-        self.measurements_subscriber_thread = None
+        self.measurements_publisher_thread = None
         self.measurement_publisher = None
 
     def start_subscribe_loop(self):
@@ -41,6 +41,7 @@ class CipherSubscriber:
 
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)
+        print("2")
         self.mqttc.loop_forever()
 
     def stop_loop(self):
@@ -48,7 +49,9 @@ class CipherSubscriber:
 
     # methods to start and stop measurement subscriber loop on a different thread
     def start_measurement_thread(self):
-        self.measurements_subscriber_thread = threading.Thread(target=self.start_measurements)
+        self.measurements_publisher_thread = threading.Thread(target=self.start_measurements)
+        self.measurements_publisher_thread.start()
+        print("3")
 
     def stop_measurement_thread(self):
         self.measurement_publisher.stop_loop()
@@ -58,7 +61,7 @@ class CipherSubscriber:
         self.measurement_publisher.start_loop()
 
     # methods to handle mqtt events
-    def on_message(self, self1, client, userdata, message):
+    def on_message(self, client, userdata, message):
         """
             After publishing to the device_connected topic we wait to receive
             the active cipher suite on.
@@ -73,7 +76,7 @@ class CipherSubscriber:
         # if the current cipher suite is not supported, stop sending measurements
         if not is_cipher_suite(message.payload):
             self.active_cipher = None
-            self.stop_measurements()
+            self.stop_measurement_thread()
             return
 
         # if the cipher contained in the message is different from the active
@@ -100,7 +103,7 @@ class CipherSubscriber:
             print(f"Broker replied with failure: {reason_code_list[0]}")
         client.disconnect()
 
-    def on_connect(self, self1,  client, userdata, flags, reason_code, properties):
+    def on_connect(self,  client, userdata, flags, reason_code, properties):
         if reason_code.is_failure:
             print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
         else:

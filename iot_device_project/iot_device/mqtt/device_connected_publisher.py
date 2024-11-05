@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 from files import file_util
 
 def send_device_connected():
+    print("1.2")
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     unacked_publish = set()
     mqttc.on_publish = on_publish
@@ -23,13 +24,14 @@ def send_device_connected():
                            ciphers="ECDHE-ECDSA-AES128-GCM-SHA256",
                            tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
         port = 8883
-
+    print("send device connected before connect")
     mqttc.connect("raspberrypi.local", port)
-
-    msg_info = mqttc.publish("device_connected", qos=1)
+    print("sdc connected")
+    msg_info = mqttc.publish("device_connected", "", qos=1)
+    print("publish")
     unacked_publish.add(msg_info.mid)
     msg_info.wait_for_publish()
-
+    print("sdc published")
 
 def on_publish(client, userdata, mid, reason_code, properties):
     # reason_code and properties will only be present in MQTTv5. It's always unset in MQTTv3

@@ -5,6 +5,9 @@ class CipherSuites(Enum):
     V1_2_PERFORMANCE = "ECDHE-ECDSA-AES128-GCM-SHA256"
     MOBILE_DEVICES = "ECDHE-ECDSA-CHACHA20-POLY1305"
 
+def is_cipher_suite(value):
+    return value in {suite.value for suite in CipherSuites}
+
 # On small resources constrained devices like microcontrollers, their CPU sometimes
 # comes with HW accelerator blocks for AES algorithm.
 #

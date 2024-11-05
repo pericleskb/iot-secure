@@ -1,12 +1,8 @@
 import paho.mqtt.client as mqtt
 
-from files import file_util
-from sql.sql_connector import get_selected_option
+from iot_device_project.iot_device.files import file_util
 
-def send_cipher():
-    # read selected security cipher suite from db
-    selected_option = get_selected_option()
-
+def send_device_connected():
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     unacked_publish = set()
     mqttc.on_publish = on_publish
@@ -19,6 +15,7 @@ def send_cipher():
 
         password = certs.get("password") if certs.get("password") else None
 
+        # use default cipher suite for first message
         mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                            certfile=certs.get("certfile"),
                            keyfile=certs.get("keyfile"),
@@ -28,10 +25,8 @@ def send_cipher():
         port = 8883
 
     mqttc.connect("raspberrypi.local", port)
-    print("connected")
 
-    msg_info = mqttc.publish("set_cipher_suite", selected_option, qos=1)
-    print(f"sent message {selected_option}")
+    msg_info = mqttc.publish("device_connected", qos=1)
     unacked_publish.add(msg_info.mid)
     msg_info.wait_for_publish()
 

@@ -72,6 +72,3 @@ For each IoT device that will run on raspberrypi device you need to do the follo
 
 # Running
 5. Run "bash run.sh" from the scripts directory
-
-.
-

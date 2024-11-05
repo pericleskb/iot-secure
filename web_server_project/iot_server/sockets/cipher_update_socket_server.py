@@ -2,6 +2,11 @@ import socket
 
 from mqtt.ciphers_publisher import send_ciphers
 
+"""
+    The SocketServer receives messages about changes the user makes on the 
+    selected cipher suite. Each time a change is detected, we need to publish
+    the change using the ciphers_publisher
+"""
 class SocketServer:
 
     def __init__(self):
@@ -18,7 +23,7 @@ class SocketServer:
                 self.connection, address = self.server_socket.accept()
                 data = self.connection.recv(1024)
                 print('Received', data)
-                send_ciphers(data)
+                send_ciphers()
             #     todo remove b for buffer
             except Exception as e:
                 print('Server error', e)

@@ -6,8 +6,9 @@ from iot_device_project.iot_device.files import file_util
 
 class MeasurementsPublisher:
 
-    def __init__(self):
+    def __init__(self, cipher):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        self.cipher = cipher
 
     def start_loop(self):
         unacked_publish = set()
@@ -45,8 +46,8 @@ class MeasurementsPublisher:
             time.sleep(5)
 
 
-        def stop_loop(self):
-            self.mqttc.loop_stop()
+    def stop_loop(self):
+        self.mqttc.loop_stop()
 
 
 def on_publish(client, userdata, mid, reason_code, properties):

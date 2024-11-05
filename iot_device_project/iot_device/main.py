@@ -1,8 +1,20 @@
-from mqtt.measurements_publisher import MeasurementsPublisher
+import threading
+
 from mqtt.cipher_subscriber import CipherSubscriber
+from mqtt.device_connected_publisher import send_device_connected
 
-measurement_publisher = MeasurementsPublisher()
-measurement_publisher.start_loop()
+def start_cipher_subscriber():
+    cipher_subscriber = CipherSubscriber()
+    cipher_subscriber.start_subscribe_loop()
 
-cipher_subscriber = CipherSubscriber()
-cipher_subscriber.start_subscribe_loop()
+# start cipher subscriber in different thread to not block current execution
+# this subscriber will handle the measurements publisher
+cipher_subscriber_thread = threading.Thread(target=start_cipher_subscriber)
+cipher_subscriber_thread.start()
+
+# publish device connected message, so that the server can respond with
+# the active cipher in cipher_subscriber
+send_device_connected()
+
+# join to get print results
+cipher_subscriber_thread.join()

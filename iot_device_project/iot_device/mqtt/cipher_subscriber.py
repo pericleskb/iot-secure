@@ -58,7 +58,7 @@ class CipherSubscriber:
         self.measurement_publisher.start_loop()
 
     # methods to handle mqtt events
-    def on_message(self, client, userdata, message):
+    def on_message(self, self1, client, userdata, message):
         """
             After publishing to the device_connected topic we wait to receive
             the active cipher suite on.
@@ -83,7 +83,7 @@ class CipherSubscriber:
             self.active_cipher = message.payload
             self.start_measurements()
 
-    def on_subscribe(self, userdata, mid, reason_code_list, properties):
+    def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
         # Since we subscribed only for a single channel, reason_code_list contains
         # a single entry
         if reason_code_list[0].is_failure:
@@ -91,7 +91,7 @@ class CipherSubscriber:
         else:
             print(f"Broker granted the following QoS: {reason_code_list[0].value}")
 
-    def on_unsubscribe(self, client, userdata, mid, reason_code_list, properties):
+    def on_unsubscribe(self, self1, client, userdata, mid, reason_code_list, properties):
         # Be careful, the reason_code_list is only present in MQTTv5.
         # In MQTTv3 it will always be empty
         if len(reason_code_list) == 0 or not reason_code_list[0].is_failure:
@@ -100,7 +100,7 @@ class CipherSubscriber:
             print(f"Broker replied with failure: {reason_code_list[0]}")
         client.disconnect()
 
-    def on_connect(self,  client, userdata, flags, reason_code, properties):
+    def on_connect(self, self1,  client, userdata, flags, reason_code, properties):
         if reason_code.is_failure:
             print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
         else:

@@ -27,11 +27,14 @@ def send_device_connected():
     print("send device connected before connect")
     mqttc.connect("raspberrypi.local", port)
     print("sdc connected")
+    mqttc.loop_start()
     msg_info = mqttc.publish("device_connected", "", qos=1)
     print("publish")
     unacked_publish.add(msg_info.mid)
     msg_info.wait_for_publish()
     print("sdc published")
+    mqttc.disconnect()
+
 
 def on_publish(client, userdata, mid, reason_code, properties):
     # reason_code and properties will only be present in MQTTv5. It's always unset in MQTTv3

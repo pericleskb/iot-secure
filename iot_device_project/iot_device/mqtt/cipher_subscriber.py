@@ -41,7 +41,6 @@ class CipherSubscriber:
 
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)
-        print("2")
         self.mqttc.loop_forever()
 
     def stop_loop(self):
@@ -73,9 +72,10 @@ class CipherSubscriber:
         # userdata is the structure we choose to provide, here it's a list()
         userdata.append(message.payload)
         print(f"topic: set_cipher_suite, message received - {message.payload}")
-
+        cipher = message.payload.decode("utf-8")
         # if the current cipher suite is not supported, stop sending measurements
-        if not is_cipher_suite(message.payload):
+        if not is_cipher_suite(cipher):
+            print(f"Received not supported cipher - {message.payload}")
             self.active_cipher = None
             self.stop_measurements()
             return
@@ -84,7 +84,7 @@ class CipherSubscriber:
         # one, stop measurements and change to the new onw
         if message.payload != self.active_cipher:
             self.stop_measurements()
-            self.active_cipher = message.payload
+            self.active_cipher = cipher
             self.start_measurement_thread()
 
     def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):

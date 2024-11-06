@@ -5,7 +5,7 @@ from sql.sql_connector import get_selected_option
 
 def send_cipher():
     # read selected security cipher suite from db
-    selected_cipher= get_selected_option()
+    selected_cipher = get_selected_option()
 
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     unacked_publish = set()
@@ -29,12 +29,16 @@ def send_cipher():
 
     mqttc.connect("raspberrypi.local", port)
     print("connected")
+    mqttc.loop_start()
+    print("loop start")
 
-    msg_info = mqttc.publish("set_cipher_suite", selected_option, qos=1)
-    print(f"sent message {selected_option}")
+    msg_info = mqttc.publish("set_cipher_suite", selected_cipher, qos=1)
+    print(f"sent message {selected_cipher}")
     unacked_publish.add(msg_info.mid)
+    print("before wait")
     msg_info.wait_for_publish()
-
+    print("got publish")
+    mqttc.disconnect()
 
 def on_publish(client, userdata, mid, reason_code, properties):
     # reason_code and properties will only be present in MQTTv5. It's always unset in MQTTv3

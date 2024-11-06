@@ -22,13 +22,14 @@ class SocketServer:
             try:
                 self.connection, address = self.server_socket.accept()
                 data = self.connection.recv(1024)
-                print('Received', data)
-                send_ciphers()
-            #     todo remove b for buffer
+                # add check for message type. not need to send the 
+                # cipher. will be read from the db
+                send_cipher()
             except Exception as e:
                 print('Server error', e)
                 self.connection.close()
                 self.server_socket.close()
+                break
 
 
     def close(self):

@@ -48,7 +48,7 @@ class IotManagerSubscriber:
     def stop_loop(self):
         self.mqttc.loop_stop()
 
-    def on_message(self, self1, client, userdata, message):
+    def on_message(self, client, userdata, message):
         # userdata is the structure we choose to provide, here it's a list()
         userdata.append(message.payload)
         # if a device is connected, publish the selected cipher
@@ -56,6 +56,7 @@ class IotManagerSubscriber:
         if message.topic == "device_connected":
             print(f"received device_connected message {message.payload}")
             send_cipher()
+            print("after send cipher()")
         elif message.topic == "measurements":
             print(f"received measurement: {message.payload}")
         #todo save on db

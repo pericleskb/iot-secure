@@ -28,16 +28,12 @@ def send_cipher():
         port = 8883
 
     mqttc.connect("raspberrypi.local", port)
-    print("connected")
     mqttc.loop_start()
-    print("loop start")
 
     msg_info = mqttc.publish("set_cipher_suite", selected_cipher, qos=1)
     print(f"sent message {selected_cipher}")
     unacked_publish.add(msg_info.mid)
-    print("before wait")
     msg_info.wait_for_publish()
-    print("got publish")
     mqttc.disconnect()
 
 def on_publish(client, userdata, mid, reason_code, properties):

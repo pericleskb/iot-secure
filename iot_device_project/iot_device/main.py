@@ -11,10 +11,8 @@ def start_cipher_subscriber():
 # this subscriber will handle the measurements publisher
 cipher_subscriber_thread = threading.Thread(target=start_cipher_subscriber)
 cipher_subscriber_thread.start()
-print("1")
 # publish device connected message, so that the server can respond with
 # the active cipher in cipher_subscriber
 send_device_connected()
-print("A")
 # join to get print results
 cipher_subscriber_thread.join()

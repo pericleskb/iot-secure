@@ -56,7 +56,6 @@ class IotManagerSubscriber:
         if message.topic == "device_connected":
             print(f"received device_connected message {message.payload}")
             send_cipher()
-            print("after send cipher()")
         elif message.topic == "measurements":
             print(f"received measurement: {message.payload}")
         #todo save on db

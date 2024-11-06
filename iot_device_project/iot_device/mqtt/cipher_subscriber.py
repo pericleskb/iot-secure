@@ -50,7 +50,6 @@ class CipherSubscriber:
     def start_measurement_thread(self):
         self.measurements_publisher_thread = threading.Thread(target=self.start_measurements)
         self.measurements_publisher_thread.start()
-        print("3")
 
     def stop_measurements(self):
         if self.measurement_publisher is not None:

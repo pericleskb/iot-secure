@@ -57,8 +57,12 @@ def get_measurements(request):
         measurements = Measurement.objects.filter(device_name=device_name).values('value', 'time').order_by('-time')[:100]
         # create json for each device's measurements
         for measurement in measurements:
+            try:
+                value = float(measurement['value'])
+            except:
+                continue
             data[device_name].append({
-                "value": measurement['value'],
+                "value": round(value, 2),
                 "time": measurement['time'].strftime("%d-%m-%Y %H:%M:%S")
             })
     return JsonResponse(data, safe=False)

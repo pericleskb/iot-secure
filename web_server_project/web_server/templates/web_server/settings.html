@@ -76,6 +76,24 @@
         .notification-message {
             visibility: hidden;
         }
+
+        .bottom-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .device-list, .measurement-list {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            width: 50%;
+        }
+
+        .device-list ul, .measurement-list ul {
+            list-style: none;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -94,13 +112,23 @@
             </section>
             <button type="button" class="save-button" onclick="savePreferences()">Save preferences</button>
         </section>
-        
 
         <!-- Text area that updates based on selection -->
         <section class="text-section">
             <h2 id="option-code"></h2>
             <h3 id="option-description"></h3>
             <p id="text-display">Select an option to see the content here.</p>
+        </section>
+
+        <section class="bottom-section">
+            <div class="device-list">
+                <h2>Devices</h2>
+                <ul id="device-list"></ul>
+            </div>
+            <div class="measurement-list">
+                <h2>Measurements</h2>
+                <ul id="measurement-list"></ul>
+            </div>
         </section>
     </main>
 
@@ -155,10 +183,35 @@
         }
 
         function populateMeasurements(data) {
-            console.log(data)
-            data.forEach((device, index) => {
+            const deviceList = document.getElementById('device-list');
+            const measurementList = document.getElementById('measurement-list');
 
-            }
+            // Clear existing list items
+            deviceList.innerHTML = '';
+            measurementList.innerHTML = '';
+
+            // Populate device names on the left
+            Object.keys(data).forEach(deviceName => {
+                const deviceItem = document.createElement('li');
+                deviceItem.textContent = deviceName;
+                deviceItem.classList.add('device-item');
+
+                // On click, show the measurements for the selected device
+                deviceItem.onclick = () => showMeasurements(data[deviceName]);
+
+                deviceList.appendChild(deviceItem);
+            });
+        }
+
+        function showMeasurements(measurements) {
+            const measurementList = document.getElementById('measurement-list');
+            measurementList.innerHTML = '';  // Clear previous measurements
+
+            measurements.forEach(measurement => {
+                const measurementItem = document.createElement('li');
+                measurementItem.textContent = `Value: ${measurement.value}, Time: ${measurement.time}`;
+                measurementList.appendChild(measurementItem);
+            });
         }
 
         // Update text section with selected option's details

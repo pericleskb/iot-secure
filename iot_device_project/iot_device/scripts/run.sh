@@ -1,4 +1,7 @@
 #!/bin/bash
 
 source ../iot-device-venv/bin/activate
-python ../main.py
+
+read -p "Enter device name: " name
+
+python ../main.py $name

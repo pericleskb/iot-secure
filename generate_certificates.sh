@@ -19,7 +19,7 @@ mkdir $path
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $path/ca.key -out $path/ca.crt -subj "/CN=raspberrypi.local" -addext "subjectAltName=DNS:raspberrypi.local"
 
 #copy crt & key to eclipse's mosquitto appropriate directory
-#we copy because we need to keep ca.key & ca.crt handy to sign client certificates
+#we copy instead of moving because we need to keep ca.key & ca.crt handy to sign client certificates
 sudo cp $path/ca.key $path/ca.crt /etc/mosquitto/ca_certificates/
 
 # Check if files copied successfully

@@ -16,3 +16,9 @@ class SecurityOptions(models.Model):
 
         def __str__(self):
                 return f"{self.option_code}:{self.option_description}"
+
+
+class Measurement(models.Model):
+    device_name = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
+    time = models.DateTimeField(auto_now_add=True)

@@ -2,10 +2,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
+from collections import defaultdict
 import json
 
-from .models import User, SecurityOptions
-from .sockets import cipher_selection_socket_update
+from .models import User, SecurityOptions, Measurement
 from .sockets.cipher_selection_socket_update import update_cipher
 
 
@@ -48,10 +48,22 @@ def get_options(request):
     options = SecurityOptions.objects.all().values()
     data = list(options)
     return JsonResponse(data, safe=False)
+
+def get_measurements(request):
+    data = defaultdict(list)
+    devices = Measurement.objects.values_list('device_name', flat=True).distinct()
+    for device_name in devices:
+        measurements = Measurement.objects.filter(device_name=device_name).values('value', 'time').order_by('-time')
+        for measurement in measurements:
+            data[device_name].append({
+                "value": measurement['value'],
+                "time": measurement['time']
+            })
+    return JsonResponse(data, safe=False)
     
 def save_preferences(request):
     if request.method == "POST":
-        data = json.loads(request.body);
+        data = json.loads(request.body)
         
         if not "selected_cipher" in data: 
             return JsonResponse({"error" : "Invalid request body"}, status=400, safe=False)

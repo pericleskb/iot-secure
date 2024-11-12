@@ -1,14 +1,16 @@
 import time
 import random
+import json
 import paho.mqtt.client as mqtt
 
 from files import file_util
 
 class MeasurementsPublisher:
 
-    def __init__(self, cipher):
+    def __init__(self, cipher, device_name):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         self.cipher = cipher
+        self.device_name = device_name
 
     def start_loop(self):
         unacked_publish = set()
@@ -39,8 +41,12 @@ class MeasurementsPublisher:
         while True:
             # Generate a random float between 30 and 80
             temperature = random.uniform(30.0, 80.0)
-            msg_info = self.mqttc.publish("measurements", temperature, qos=1)
-            print(f"sent message {temperature}")
+            data = {
+                "device_name": self.device_name,
+                "temperature": temperature
+            }
+            msg_info = self.mqttc.publish("measurements", json.dumps(data), qos=1)
+            print(f"sent message {json.dumps(data)}")
             unacked_publish.add(msg_info.mid)
             msg_info.wait_for_publish()
             time.sleep(5)

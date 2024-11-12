@@ -10,12 +10,12 @@ This project consists of the following software modules:
 4. IoT Server. An MQTT client to manage communication with IoT devices
 5. IoT Devices. MQTT clients that collect data and send them to the server.
 
-For now only Debian Linux on RaspberryPis is supported.
+For now only Debian Linux on Raspberry Pi is supported.
 
 The project is setup so that the first 4 elements run on the same machine.
 The IoT device code can run on any number of devices.
 
-Follow the instuctions below to set up the project.
+Follow the instructions below to set up the project.
 
 ## Setting up the server machine. ##
 
@@ -34,7 +34,7 @@ Follow the instuctions below to set up the project.
 6. In order to use SSL with this project you will need to create a Certificate Authority and self sign the certificates of all the devices in your mqtt network.
    This is achieved easily by running the bash script generate_certificates.sh, again located in the project's root directory. Follow any instruction on the command line.
    First you need to fill in a path (absolute or relative) where the certificates generated will be stored.
-   First this script will produce the certifacte authority's key and certificate and copy them to the appropriate directory where they can be used by the Eclipse MQTT Broker. 
+   First this script will produce the certificate authority's key and certificate and copy them to the appropriate directory where they can be used by the Eclipse MQTT Broker.
    For this it will prompt you to fill the details of the Broker's certificate. Make sure to fill in the same details for all certificates that will be produced during this process.
    IMPORTANT: When prompted for the CN (Common Name) please enter "raspberrypi.local".
    IMPORTANT: You will be asked to provide a PEM password. This is the password that will encrypt the private key, so it will be stored securely. 

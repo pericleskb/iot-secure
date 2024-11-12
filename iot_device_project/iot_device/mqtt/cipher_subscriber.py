@@ -7,13 +7,14 @@ from mqtt.measurements_publisher import MeasurementsPublisher
 
 class CipherSubscriber:
 
-    def __init__(self):
+    def __init__(self, device_name):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         # We wait to receive the current active cipher before
         # sending measurements
         self.active_cipher = None
         self.measurements_publisher_thread = None
         self.measurement_publisher = None
+        self.device_name = device_name
 
     def start_subscribe_loop(self):
         self.mqttc.on_connect = self.on_connect
@@ -56,7 +57,7 @@ class CipherSubscriber:
             self.measurement_publisher.stop_loop()
 
     def start_measurements(self):
-        self.measurement_publisher = MeasurementsPublisher(self.active_cipher)
+        self.measurement_publisher = MeasurementsPublisher(self.active_cipher, self.device_name)
         self.measurement_publisher.start_loop()
 
     # methods to handle mqtt events

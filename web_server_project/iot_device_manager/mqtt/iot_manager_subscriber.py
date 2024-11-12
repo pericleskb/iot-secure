@@ -1,7 +1,9 @@
-import paho.mqtt.client as mqtt
-
+import json
 from files import file_util
+from sql.sql_connector import insert_measurement
+
 from mqtt.ciphers_publisher import send_cipher
+import paho.mqtt.client as mqtt
 
 """
     This class implements an MQTT subscriber and will handle all the
@@ -57,8 +59,10 @@ class IotManagerSubscriber:
             print(f"received device_connected message {message.payload}")
             send_cipher()
         elif message.topic == "measurements":
-            print(f"received measurement: {message.payload}")
-        #todo save on db
+            data = json.loads(message.payload)
+            print(f"received measurement: {data}")
+            insert_measurement(data["device_name"], data["temperature"])
+            #todo - retrieve on page load, with ajax
 
     def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
         #todo check for other reason codes

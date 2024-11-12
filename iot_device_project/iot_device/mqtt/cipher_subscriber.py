@@ -43,6 +43,7 @@ class CipherSubscriber:
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)
         self.mqttc.loop_forever()
+        print(f"Received the following message: {self.mqttc.user_data_get()}")
 
     def stop_loop(self):
         self.mqttc.loop_stop()
@@ -83,6 +84,7 @@ class CipherSubscriber:
         # if the cipher contained in the message is different from the active
         # one, stop measurements and change to the new onw
         if message.payload != self.active_cipher:
+            print("New cipher received")
             self.stop_measurements()
             self.active_cipher = cipher
             self.start_measurement_thread()

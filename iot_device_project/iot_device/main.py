@@ -9,7 +9,7 @@ def start_cipher_subscriber(name):
     cipher_subscriber.start_subscribe_loop()
 
 # Check if an argument was passed
-if len(sys.argv) != 1:
+if len(sys.argv) != 2:
     print("Please pass the device's name as a parameter.")
     exit()
 

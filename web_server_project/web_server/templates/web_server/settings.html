@@ -62,14 +62,20 @@
             margin-top: 0;
         }
 
+        main > h2 {
+            margin-left: 20px;
+            padding: 10px;
+            gap: 10px;
+        }
+
         .measurement-list {
-            max-height: 200px; /* Fixed height */
-            overflow-y: auto; /* Add scrollbar */
-            width: 60%; /* Standard size for measurement list */
+            max-height: 200px;
+            overflow-y: auto;
+            width: 60%;
         }
 
         .device-list {
-            max-height: 400px; /* Fixed height for device list */
+            max-height: 200px;
             overflow-y: auto;
         }
 
@@ -126,6 +132,7 @@
     </header>
 
     <main>
+        <h2>Options selection</h2>
         <section class="horizontal-section">
             <!-- List of values with radio buttons -->
             <section class="options-section">
@@ -145,6 +152,7 @@
             </section>
         </section>
 
+        <h2>Measurements panel</h2>
         <section class="horizontal-section">
             <section class="device-list">
                 <h2>Devices</h2>

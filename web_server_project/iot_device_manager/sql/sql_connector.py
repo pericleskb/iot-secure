@@ -26,5 +26,5 @@ def insert_measurement(device_name, value):
     connection = mariadb.connect(**con_params)
     cursor = connection.cursor()
     time = datetime.now()
-    cursor.execute("INSERT INTO events (device_name, value, time) VALUES (%s, %s, %s)", (device_name, value, time))
+    cursor.execute("INSERT INTO web_server_measurement (device_name, value, time) VALUES (%s, %s, %s)", (device_name, value, time))
     connection.commit()

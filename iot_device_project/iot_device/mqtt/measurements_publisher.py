@@ -34,9 +34,7 @@ class MeasurementsPublisher:
             port = 8883
 
         self.mqttc.connect("raspberrypi.local", port)
-        print("connected")
         self.mqttc.loop_start()
-        print("loop started")
 
         while True:
             # Generate a random float between 30 and 80
@@ -49,7 +47,7 @@ class MeasurementsPublisher:
             print(f"sent message {json.dumps(data)}")
             unacked_publish.add(msg_info.mid)
             msg_info.wait_for_publish()
-            time.sleep(5)
+            time.sleep(20)
 
 
     def stop_loop(self):

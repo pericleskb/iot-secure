@@ -75,7 +75,6 @@ class IotManagerSubscriber:
                 print("New cipher received")
                 self.cipher = new_cipher
                 self.stop_loop()
-                self.start_subscribe_loop()
 
 
     def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):

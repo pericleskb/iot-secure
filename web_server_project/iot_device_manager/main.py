@@ -28,6 +28,12 @@ socket_thread.start()
 # the network
 send_cipher()
 
-#keep main running until threads finish
+# keep main running until new cipher is received, when the thread will
+# stop itself
 mqtt_thread.join()
-socket_thread.join()
+
+# then get new option from database and restart thread with new cipher
+while True:
+	selected_option = get_selected_option()
+	mqtt_thread.start()
+	mqtt_thread.join()

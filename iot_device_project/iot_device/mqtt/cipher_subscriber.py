@@ -112,4 +112,4 @@ class CipherSubscriber:
         else:
             # we should always subscribe from on_connect callback to be sure
             # our subscribed is persisted across reconnections.
-            client.subscribe("set_cipher_suite")
+            client.subscribe("set_cipher_suite", qos = 1)

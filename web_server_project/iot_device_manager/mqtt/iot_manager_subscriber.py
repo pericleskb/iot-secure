@@ -98,6 +98,6 @@ class IotManagerSubscriber:
         else:
             # we should always subscribe from on_connect callback to be sure
             # our subscribed is persisted across reconnections.
-            client.subscribe("measurements")
-            client.subscribe("device_connected")
-            client.subscribe("set_cipher_suite")
+            client.subscribe("measurements", qos = 1)
+            client.subscribe("device_connected", qos = 1)
+            client.subscribe("set_cipher_suite", qos = 1)

@@ -6,7 +6,12 @@ from CipherSuites import is_cipher_suite
 from mqtt.measurements_publisher import MeasurementsPublisher
 
 class CipherSubscriber:
-
+    """
+        The cipher subscriber runs in a loop and handles the lifecycle of the
+        measurements publisher thread. Every time a new cipher option is
+        received, it will restart MeasurementsPublisher, providing it with
+        the new cipher option.
+    """
     def __init__(self, device_name):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         # We wait to receive the current active cipher before

@@ -3,7 +3,6 @@ import paho.mqtt.client as mqtt
 from files import file_util
 
 def send_device_connected():
-    print("device connected publisher started")
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     unacked_publish = set()
     mqttc.on_publish = on_publish
@@ -11,7 +10,6 @@ def send_device_connected():
     mqttc.user_data_set(unacked_publish)
 
     if file_util.should_use_ssl():
-        print("device connected publisher use ssl")
         certs = file_util.read_certificate_conf_file()
         # Certificates defined. Use ssl
 
@@ -27,16 +25,11 @@ def send_device_connected():
         port = 8883
 
     mqttc.connect("raspberrypi.local", port)
-    print("device connected publisher connected")
     mqttc.loop_start()
-    print("device connected publisher loop started")
     msg_info = mqttc.publish("device_connected", "", qos=1)
 
-    print("device connected publisher publish")
     unacked_publish.add(msg_info.mid)
-    print("device connected publisher add unacked publish")
     msg_info.wait_for_publish()
-    print("device connected publisher published")
     mqttc.disconnect()
 
 

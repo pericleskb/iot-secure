@@ -21,8 +21,12 @@ device_name = sys.argv[1]
 # this subscriber will handle the measurements publisher
 cipher_subscriber_thread = threading.Thread(target=start_cipher_subscriber)
 cipher_subscriber_thread.start()
+
 # publish device connected message, so that the server can respond with
 # the active cipher in cipher_subscriber
+# If the IoT Device Manager is not running during this time, it will publish
+# the active cipher at the time of its connection
 send_device_connected()
+
 # join to get print results
 cipher_subscriber_thread.join()

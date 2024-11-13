@@ -68,7 +68,7 @@ def get_measurements(request):
     return JsonResponse(data, safe=False)
     
 def save_preferences(request):
-    if request.method == "POST":
+    if request.method == "PUT":
         data = json.loads(request.body)
         
         if not "selected_cipher" in data: 

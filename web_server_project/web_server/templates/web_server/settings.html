@@ -221,7 +221,7 @@
             deviceList.innerHTML = '';
             measurementList.innerHTML = '';
 
-            // Populate device names on the left with radio buttons
+            // Iterate through json response to populate device names on the left with radio buttons
             Object.keys(data).forEach(deviceName => {
                 const label = document.createElement('label');
                 label.classList.add('radio-button');

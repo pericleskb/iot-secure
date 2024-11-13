@@ -53,7 +53,7 @@ def get_measurements(request):
     data = defaultdict(list)
     devices = Measurement.objects.values_list('device_name', flat=True).distinct()
     for device_name in devices:
-        # get 100 last measurements for each device in db
+        # get 100 last measurements for each device in db in chronological order
         measurements = Measurement.objects.filter(device_name=device_name).values('value', 'time').order_by('-time')[:100]
         # create json for each device's measurements
         for measurement in measurements:

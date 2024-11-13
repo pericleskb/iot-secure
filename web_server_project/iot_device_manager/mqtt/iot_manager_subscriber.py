@@ -1,6 +1,7 @@
 import json
 from files import file_util
 from sql.sql_connector import insert_measurement
+from CipherSuites import is_cipher_suite
 
 from mqtt.ciphers_publisher import send_cipher
 import paho.mqtt.client as mqtt
@@ -8,11 +9,12 @@ import paho.mqtt.client as mqtt
 """
     This class implements an MQTT subscriber and will handle all the
     incoming messages from the MQTT broker. 
-    It subscribes to 2 topics.
+    It subscribes to 3 topics.
     1. device_connected topic. Each device connected to the network will publish
        a message on this topic and wait to receive the active cipher on the
        set_cipher_suite topic.
     2. measurements topic. Receive the measurements from devices
+    3. set_cipher_suite. Receive new security settings
 """
 class IotManagerSubscriber:
 
@@ -62,7 +64,19 @@ class IotManagerSubscriber:
             data = json.loads(message.payload)
             print(f"received measurement: {data}")
             insert_measurement(data["device_name"], data["temperature"])
-            #todo - retrieve on page load, with ajax
+        elif message.topic == "set_cipher_suite":
+            print(
+                f"topic: set_cipher_suite, message received - {message.payload}")
+            new_cipher = message.payload.decode("utf-8")
+            if not is_cipher_suite(new_cipher):
+                print(f"Received not supported cipher - {message.payload}")
+                return
+            if message.payload != self.cipher:
+                print("New cipher received")
+                self.cipher = new_cipher
+                self.stop_loop()
+                self.start_subscribe_loop()
+
 
     def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
         #todo check for other reason codes
@@ -86,3 +100,4 @@ class IotManagerSubscriber:
             # our subscribed is persisted across reconnections.
             client.subscribe("measurements")
             client.subscribe("device_connected")
+            client.subscribe("set_cipher_suite")

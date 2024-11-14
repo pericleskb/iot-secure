@@ -22,10 +22,10 @@ def start_iot_manager_subscriber(q):
 	measurement_subscriber.start_subscribe_loop()
 
 def start_socket_server():
-	socket_server = SocketServer()
+	socket_server = SocketServer(password)
 	socket_server.start()
 
-# create queue to get result from thread
+# create queue to get result from iot manager thread
 q = queue.Queue()
 mqtt_thread = threading.Thread(target=start_iot_manager_subscriber, args=(q,))
 
@@ -43,7 +43,7 @@ try:
 except ssl.SSLError:
 	print("Unable to connect. "
 		  "Please make sure you provided the correct password.")
-	quit(1)
+	SystemExit(1)
 
 # keep main running until new cipher is received, when the thread will
 # stop itself
@@ -52,8 +52,9 @@ mqtt_thread.join()
 # Retrieve the result from the queue
 result = q.get()
 
-# then get new option from database and restart thread with new cipher
-while result != 1:
+# if no exit result was provided
+# get new option from database and restart thread with new cipher
+while result != -1:
 	selected_option = get_selected_option()
 	mqtt_thread.start()
 	mqtt_thread.join()

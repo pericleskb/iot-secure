@@ -9,10 +9,11 @@ from mqtt.ciphers_publisher import send_cipher
 """
 class SocketServer:
 
-    def __init__(self):
+    def __init__(self, password):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection = None
         self.active = True
+        self.password = password
 
     def start(self):
         self.server_socket.bind(("127.0.0.1", 8235))
@@ -24,7 +25,7 @@ class SocketServer:
                 data = self.connection.recv(1024)
                 # add check for message type. not need to send the 
                 # cipher. will be read from the db
-                send_cipher()
+                send_cipher(self.password)
             except Exception as e:
                 print('Server error', e)
                 self.connection.close()

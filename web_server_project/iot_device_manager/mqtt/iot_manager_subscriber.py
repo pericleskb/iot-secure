@@ -1,5 +1,6 @@
 import json
 import ssl
+import queue
 
 from files import file_util
 from sql.sql_connector import insert_measurement
@@ -21,8 +22,9 @@ import paho.mqtt.client as mqtt
 """
 class IotManagerSubscriber:
 
-    def __init__(self, cipher, password):
+    def __init__(self, q, cipher, password):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        self.queue = q
         self.cipher = cipher
         self.password = password
 
@@ -49,7 +51,8 @@ class IotManagerSubscriber:
             except ssl.SSLError:
                 print("Unable to connect. "
                       "Please make sure you provided the correct password.")
-                quit(1)
+                self.queue.put(-1)
+                quit()
 
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)
@@ -58,6 +61,8 @@ class IotManagerSubscriber:
 
     def stop_loop(self):
         self.mqttc.loop_stop()
+        self.queue.put(-1)
+        quit()
 
     def on_message(self, client, userdata, message):
         # userdata is the structure we choose to provide, here it's a list()

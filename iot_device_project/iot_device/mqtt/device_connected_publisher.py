@@ -1,3 +1,5 @@
+import ssl
+
 import paho.mqtt.client as mqtt
 
 from files import file_util
@@ -13,14 +15,19 @@ def send_device_connected(password):
         certs = file_util.read_certificate_conf_file()
         # Certificates defined. Use ssl
 
-        # use default cipher suite for first message
-        mqttc.tls_set(ca_certs=certs.get("ca_certs"),
-                           certfile=certs.get("certfile"),
-                           keyfile=certs.get("keyfile"),
-                           keyfile_password=password,
-                           ciphers="ECDHE-ECDSA-AES256-GCM-SHA384",
-                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
-        port = 8883
+        try:
+            # use default cipher suite for first message
+            mqttc.tls_set(ca_certs=certs.get("ca_certs"),
+                               certfile=certs.get("certfile"),
+                               keyfile=certs.get("keyfile"),
+                               keyfile_password=password,
+                               ciphers="ECDHE-ECDSA-AES256-GCM-SHA384",
+                               tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
+            port = 8883
+        except ssl.SSLError:
+            print("Unable to connect. "
+                  "Please make sure you provided the correct password.")
+            quit()
 
     mqttc.connect("raspberrypi.local", port)
     mqttc.loop_start()

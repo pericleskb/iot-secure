@@ -1,5 +1,6 @@
 import threading
 import paho.mqtt.client as mqtt
+import ssl
 
 from files import file_util
 from CipherSuites import is_cipher_suite
@@ -35,14 +36,20 @@ class CipherSubscriber:
             # Certificates defined. Use ssl
             certs = file_util.read_certificate_conf_file()
 
-            self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
-                               certfile=certs.get("certfile"),
-                               keyfile=certs.get("keyfile"),
-                               keyfile_password=self.password,
-                               ciphers=self.active_cipher,
-                               tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
-            # ssl files defined, connect to the mqtt broker's https port
-            port = 8883
+            try:
+
+                self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
+                                   certfile=certs.get("certfile"),
+                                   keyfile=certs.get("keyfile"),
+                                   keyfile_password=self.password,
+                                   ciphers=self.active_cipher,
+                                   tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
+                # ssl files defined, connect to the mqtt broker's https port
+                port = 8883
+            except ssl.SSLError:
+                print("Unable to connect. "
+                      "Please make sure you provided the correct password.")
+                quit()
 
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)

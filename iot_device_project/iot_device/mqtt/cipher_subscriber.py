@@ -69,7 +69,7 @@ class CipherSubscriber:
             self.measurement_publisher.stop_loop()
 
     def start_measurements(self):
-        self.measurement_publisher = MeasurementsPublisher(self.active_cipher, self.device_name)
+        self.measurement_publisher = MeasurementsPublisher(self.active_cipher, self.device_name, self.password)
         self.measurement_publisher.start_loop()
 
     # methods to handle mqtt events

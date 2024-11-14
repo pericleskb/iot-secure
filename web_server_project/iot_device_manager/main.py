@@ -1,14 +1,22 @@
 import threading
+import sys
 
 from mqtt.iot_manager_subscriber import IotManagerSubscriber
 from mqtt.ciphers_publisher import send_cipher
 from sockets.cipher_update_socket_server import SocketServer
 from sql.sql_connector import get_selected_option
 
+# Check if an argument was passed
+if len(sys.argv) != 2:
+	print(
+		"Please pass the private key's encryption passwords as a parameter.")
+	exit()
+
+password = sys.argv[1]
 selected_option = get_selected_option()
 
 def start_iot_manager_subscriber():
-	measurement_subscriber = IotManagerSubscriber(selected_option)
+	measurement_subscriber = IotManagerSubscriber(selected_option, password)
 	measurement_subscriber.start_subscribe_loop()
 
 def start_socket_server():

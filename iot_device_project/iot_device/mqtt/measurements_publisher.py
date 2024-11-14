@@ -7,10 +7,11 @@ from files import file_util
 
 class MeasurementsPublisher:
 
-    def __init__(self, cipher, device_name):
+    def __init__(self, cipher, device_name, password):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         self.cipher = cipher
         self.device_name = device_name
+        self.password = password
 
     def start_loop(self):
         unacked_publish = set()
@@ -23,12 +24,10 @@ class MeasurementsPublisher:
             # Certificates defined. Use ssl
             certs = file_util.read_certificate_conf_file()
 
-            password = certs.get("password") if certs.get("password") else None
-
             self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
-                          keyfile_password=password,
+                          keyfile_password=self.password,
                           ciphers=self.cipher,
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883

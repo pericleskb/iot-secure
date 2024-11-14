@@ -12,7 +12,7 @@ class CipherSubscriber:
         received, it will restart MeasurementsPublisher, providing it with
         the new cipher option.
     """
-    def __init__(self, device_name):
+    def __init__(self, device_name, password):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         # We wait to receive the current active cipher before
         # sending measurements
@@ -20,6 +20,7 @@ class CipherSubscriber:
         self.measurements_publisher_thread = None
         self.measurement_publisher = None
         self.device_name = device_name
+        self.password = password
 
     def start_subscribe_loop(self):
         self.mqttc.on_connect = self.on_connect
@@ -34,12 +35,10 @@ class CipherSubscriber:
             # Certificates defined. Use ssl
             certs = file_util.read_certificate_conf_file()
 
-            password = certs.get("password") if certs.get("password") else None
-
             self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                                certfile=certs.get("certfile"),
                                keyfile=certs.get("keyfile"),
-                               keyfile_password=password,
+                               keyfile_password=self.password,
                                ciphers=self.active_cipher,
                                tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             # ssl files defined, connect to the mqtt broker's https port

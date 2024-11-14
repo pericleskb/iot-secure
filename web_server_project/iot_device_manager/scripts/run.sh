@@ -1,4 +1,7 @@
 #!/bin/bash
 
 source ../iot-server-venv/bin/activate
-python ../main.py
+
+read -p "Enter private key encryption password: " password
+
+python ../main.py $password

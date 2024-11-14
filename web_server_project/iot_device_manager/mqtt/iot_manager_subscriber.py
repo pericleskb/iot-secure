@@ -19,9 +19,10 @@ import paho.mqtt.client as mqtt
 """
 class IotManagerSubscriber:
 
-    def __init__(self, cipher):
+    def __init__(self, cipher, password):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         self.cipher = cipher
+        self.password = password
 
     def start_subscribe_loop(self):
         self.mqttc.on_connect = self.on_connect
@@ -35,12 +36,10 @@ class IotManagerSubscriber:
             # Certificates defined. Use ssl
             certs = file_util.read_certificate_conf_file()
 
-            password = certs.get("password") if certs.get("password") else None
-
             self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                           certfile=certs.get("certfile"),
                           keyfile=certs.get("keyfile"),
-                          keyfile_password=password,
+                          keyfile_password=self.password,
                           ciphers=self.cipher,
                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883

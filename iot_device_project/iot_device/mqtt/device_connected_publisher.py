@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 
 from files import file_util
 
-def send_device_connected():
+def send_device_connected(password):
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     unacked_publish = set()
     mqttc.on_publish = on_publish
@@ -12,8 +12,6 @@ def send_device_connected():
     if file_util.should_use_ssl():
         certs = file_util.read_certificate_conf_file()
         # Certificates defined. Use ssl
-
-        password = certs.get("password") if certs.get("password") else None
 
         # use default cipher suite for first message
         mqttc.tls_set(ca_certs=certs.get("ca_certs"),

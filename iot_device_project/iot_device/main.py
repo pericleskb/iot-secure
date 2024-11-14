@@ -6,16 +6,17 @@ from mqtt.device_connected_publisher import send_device_connected
 
 device_name = None
 
-def start_cipher_subscriber():
-    cipher_subscriber = CipherSubscriber(device_name)
-    cipher_subscriber.start_subscribe_loop()
-
 # Check if an argument was passed
-if len(sys.argv) != 2:
-    print("Please pass the device's name as a parameter.")
+if len(sys.argv) != 3:
+    print("Please pass the device's name and the private key's encryption passwords as parameters.")
     exit()
 
 device_name = sys.argv[1]
+password = sys.argv[2]
+
+def start_cipher_subscriber():
+    cipher_subscriber = CipherSubscriber(device_name, password)
+    cipher_subscriber.start_subscribe_loop()
 
 # start cipher subscriber in different thread to not block current execution
 # this subscriber will handle the measurements publisher

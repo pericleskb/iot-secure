@@ -25,8 +25,6 @@ def send_device_connected(password):
                                tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883
         except ssl.SSLError:
-            print("Unable to connect. "
-                  "Please make sure you provided the correct password.")
             quit()
 
     mqttc.connect("raspberrypi.local", port)

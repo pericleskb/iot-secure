@@ -49,10 +49,8 @@ class IotManagerSubscriber:
                               tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
                 port = 8883
             except ssl.SSLError:
-                print("Unable to connect. "
-                      "Please make sure you provided the correct password.")
                 self.queue.put(-1)
-                quit()
+                raise SystemExit(1)
 
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)
@@ -60,9 +58,8 @@ class IotManagerSubscriber:
         print(f"Received the following message: {self.mqttc.user_data_get()}")
 
     def stop_loop(self):
+        self.queue.put(1)
         self.mqttc.loop_stop()
-        self.queue.put(-1)
-        quit()
 
     def on_message(self, client, userdata, message):
         # userdata is the structure we choose to provide, here it's a list()
@@ -71,7 +68,7 @@ class IotManagerSubscriber:
         # so it can start sending measurements
         if message.topic == "device_connected":
             print(f"received device_connected message {message.payload}")
-            send_cipher()
+            send_cipher(self.password)
         elif message.topic == "measurements":
             data = json.loads(message.payload)
             print(f"received measurement: {data}")

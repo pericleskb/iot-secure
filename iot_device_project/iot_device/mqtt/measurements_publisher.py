@@ -37,7 +37,7 @@ class MeasurementsPublisher:
 
         while True:
             # Generate a random float between 30 and 80
-            temperature = random.uniform(30.0, 80.0)
+            temperature = random.uniform(20.0, 30.0)
             data = {
                 "device_name": self.device_name,
                 "temperature": temperature
@@ -46,7 +46,7 @@ class MeasurementsPublisher:
             print(f"sent message {json.dumps(data)}")
             unacked_publish.add(msg_info.mid)
             msg_info.wait_for_publish()
-            time.sleep(20)
+            time.sleep(10)
 
 
     def stop_loop(self):

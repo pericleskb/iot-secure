@@ -275,7 +275,7 @@
             // Make the POST request
             const csrftoken = getCookie('csrftoken');
             fetch('/api/save-preferences/', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrftoken

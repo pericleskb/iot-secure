@@ -27,7 +27,7 @@ cipher_subscriber_thread.start()
 # the active cipher in cipher_subscriber
 # If the IoT Device Manager is not running during this time, it will publish
 # the active cipher at the time of its connection
-send_device_connected()
+send_device_connected(password)
 
 # join to get print results
 cipher_subscriber_thread.join()

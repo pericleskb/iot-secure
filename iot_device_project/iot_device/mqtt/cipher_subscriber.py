@@ -43,7 +43,7 @@ class CipherSubscriber:
                                    keyfile=certs.get("keyfile"),
                                    keyfile_password=self.password,
                                    ciphers=self.active_cipher,
-                                   tls_version=CipherSuites.get_description(selected_cipher))
+                                   tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
                 # ssl files defined, connect to the mqtt broker's https port
                 port = 8883
             except ssl.SSLError:

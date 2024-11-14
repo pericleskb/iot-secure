@@ -3,9 +3,6 @@ import paho.mqtt.client as mqtt
 from files import file_util
 from sql.sql_connector import get_selected_option
 
-from web_server_project.iot_device_manager.CipherSuites import CipherSuites
-
-
 def send_cipher(password):
     # read selected security cipher suite from db
     selected_cipher = get_selected_option()
@@ -25,7 +22,7 @@ def send_cipher(password):
                            keyfile=certs.get("keyfile"),
                            keyfile_password=password,
                            ciphers=selected_cipher,
-                           tls_version=CipherSuites.get_description(selected_cipher))
+                           tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
         port = 8883
 
     mqttc.connect("raspberrypi.local", port)

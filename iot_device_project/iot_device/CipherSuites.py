@@ -1,25 +1,9 @@
 from enum import Enum
-import ssl
 
 class CipherSuites(Enum):
-    V1_3_SECURE = ("TLS_AES_256_GCM_SHA384", ssl.PROTOCOL_TLS)
-    V1_3_PERFORMANCE = ("TLS_AES_128_GCM_SHA256", ssl.PROTOCOL_TLS)
-    V1_3_MOBILE_DEVICES = ("TLS_CHACHA20_POLY1305_SHA256", ssl.PROTOCOL_TLS)
-    V1_2_SECURE = ("ECDHE-ECDSA-AES256-GCM-SHA384", ssl.PROTOCOL_TLSv1_2)
-    V1_2_PERFORMANCE = ("ECDHE-ECDSA-AES128-GCM-SHA256", ssl.PROTOCOL_TLSv1_2)
-    V1_2_MOBILE_DEVICES = ("ECDHE-ECDSA-CHACHA20-POLY1305", ssl.PROTOCOL_TLSv1_2)
-
-    def __init__(self, value, description):
-        self._value_ = value  # Set the first value as the enum's value
-        self.tls_version = description  # Store the second value as an attribute
-
-    @classmethod
-    def get_description(cls, value):
-        # Iterate through the enum to find the matching value
-        for suite in cls:
-            if suite.value == value:
-                return suite.tls_version
-        return None  # Return None if the value isn't found
+    V1_2_SECURE = "ECDHE-ECDSA-AES256-GCM-SHA384"
+    V1_2_PERFORMANCE = "ECDHE-ECDSA-AES128-GCM-SHA256"
+    MOBILE_DEVICES = "ECDHE-ECDSA-CHACHA20-POLY1305"
 
 def is_cipher_suite(value):
     return value in {suite.value for suite in CipherSuites}

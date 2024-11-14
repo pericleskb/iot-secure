@@ -29,7 +29,7 @@ class MeasurementsPublisher:
                           keyfile=certs.get("keyfile"),
                           keyfile_password=self.password,
                           ciphers=self.cipher,
-                          tls_version=CipherSuites.get_description(selected_cipher))
+                          tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
             port = 8883
 
         self.mqttc.connect("raspberrypi.local", port)

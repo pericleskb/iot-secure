@@ -1,4 +1,6 @@
 import json
+import ssl
+
 from files import file_util
 from sql.sql_connector import insert_measurement
 from CipherSuites import is_cipher_suite
@@ -36,13 +38,18 @@ class IotManagerSubscriber:
             # Certificates defined. Use ssl
             certs = file_util.read_certificate_conf_file()
 
-            self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
-                          certfile=certs.get("certfile"),
-                          keyfile=certs.get("keyfile"),
-                          keyfile_password=self.password,
-                          ciphers=self.cipher,
-                          tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
-            port = 8883
+            try:
+                self.mqttc.tls_set(ca_certs=certs.get("ca_certs"),
+                              certfile=certs.get("certfile"),
+                              keyfile=certs.get("keyfile"),
+                              keyfile_password=self.password,
+                              ciphers=self.cipher,
+                              tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
+                port = 8883
+            except ssl.SSLError:
+                print("Unable to connect. "
+                      "Please make sure you provided the correct password.")
+                quit(1)
 
         self.mqttc.user_data_set([])
         self.mqttc.connect("raspberrypi.local", port)

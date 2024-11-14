@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 from files import file_util
 from sql.sql_connector import get_selected_option
 
-def send_cipher():
+def send_cipher(password):
     # read selected security cipher suite from db
     selected_cipher = get_selected_option()
 
@@ -16,8 +16,6 @@ def send_cipher():
     if file_util.should_use_ssl():
         certs = file_util.read_certificate_conf_file()
         # Certificates defined. Use ssl
-
-        password = certs.get("password") if certs.get("password") else None
 
         mqttc.tls_set(ca_certs=certs.get("ca_certs"),
                            certfile=certs.get("certfile"),

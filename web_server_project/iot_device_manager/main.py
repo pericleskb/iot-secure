@@ -1,5 +1,7 @@
+import ssl
 import threading
 import sys
+import queue
 
 from mqtt.iot_manager_subscriber import IotManagerSubscriber
 from mqtt.ciphers_publisher import send_cipher
@@ -23,7 +25,9 @@ def start_socket_server():
 	socket_server = SocketServer()
 	socket_server.start()
 
-mqtt_thread = threading.Thread(target=start_iot_manager_subscriber)
+# create queue to get result from thread
+q = queue.Queue()
+mqtt_thread = threading.Thread(target=start_iot_manager_subscriber, args=(q,))
 
 # start IPC socket to be able to receive messages about
 # changes on the selected cipher
@@ -34,14 +38,23 @@ socket_thread.start()
 
 # publish selected cipher in case there are iot devices already connected to
 # the network
-send_cipher()
+try:
+	send_cipher(password)
+except ssl.SSLError:
+	print("Unable to connect. "
+		  "Please make sure you provided the correct password.")
+	quit(1)
 
 # keep main running until new cipher is received, when the thread will
 # stop itself
 mqtt_thread.join()
 
+# Retrieve the result from the queue
+result = q.get()
+
 # then get new option from database and restart thread with new cipher
-while True:
+while result != 1:
 	selected_option = get_selected_option()
 	mqtt_thread.start()
 	mqtt_thread.join()
+	result = q.get()

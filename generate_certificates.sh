@@ -45,6 +45,7 @@ openssl ec -in $folderpath/broker_private_key.pem -aes256 -out $folderpath/broke
 
 #move broker's encrypted key and certificate to eclipse's mosquitto appropriate directory
 sudo mv $folderpath/broker_certificate.pem $folderpath/broker_private_key_encrypted.pem /etc/mosquitto/certs/
+rm $folderpath/ecdsa_request.csr $folderpath/broker_private_key.pem
 
 #change permissions
 sudo chmod 644 /etc/mosquitto/certs/broker_private_key_encrypted.pem

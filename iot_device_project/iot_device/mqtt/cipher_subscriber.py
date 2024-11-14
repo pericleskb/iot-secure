@@ -87,7 +87,7 @@ class CipherSubscriber:
             return
 
         # if the cipher contained in the message is different from the active
-        # one, stop measurements and change to the new onw
+        # one, stop measurements and change to the new one
         if cipher != self.active_cipher:
             print("New cipher received")
             self.stop_measurements()

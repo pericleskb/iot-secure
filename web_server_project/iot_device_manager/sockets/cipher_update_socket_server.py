@@ -5,7 +5,7 @@ from mqtt.ciphers_publisher import send_cipher
 """
     The SocketServer receives messages about changes the user makes on the 
     selected cipher suite. Each time a change is detected, we need to publish
-    the change using the ciphers_publisher
+    the change using the ciphers_publisher.
 """
 class SocketServer:
 

@@ -17,7 +17,7 @@ file_path = os.path.join(dir_path, "certificates.conf")
 # Check if the file exists
 if not os.path.exists(file_path):
     # Content to add to the file
-    file_content = """#ca_certs=path_to_authority_certificate\n#certfile=path_to_device_certificate\n#keyfile=path_to_device_key\n#password=private_key_encryption_password"""
+    file_content = """#ca_certs=path_to_authority_certificate\n#certfile=path_to_device_certificate\n#keyfile=path_to_device_key"""
 
     # Create the file and write the content
     with open(file_path, 'w') as file:

@@ -14,7 +14,8 @@ import paho.mqtt.client as mqtt
        a message on this topic and wait to receive the active cipher on the
        set_cipher_suite topic.
     2. measurements topic. Receive the measurements from devices
-    3. set_cipher_suite. Receive new security settings
+    3. set_cipher_suite. Receive new security settings. Stops current thread. 
+       The thread will be restarted from main.py with the new security settings
 """
 class IotManagerSubscriber:
 
@@ -78,7 +79,6 @@ class IotManagerSubscriber:
 
 
     def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
-        #todo check for other reason codes
         if reason_code_list[0].is_failure:
             print(f"Broker rejected you subscription: {reason_code_list[0]}")
         else:

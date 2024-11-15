@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                                               "The ChaCha20 encryption algorithm in this suite is designed to perform efficiently even on devices without"
                                               " encryption hardware, making it perfect for mobile phones, tablets, or other devices where battery life and"
                                               " processing power are limited.<br>"
-                                              "<br>This option helps ensure secure connections without significantly impacting device performance or battery life.",
+                                              "This option helps ensure secure connections without significantly impacting device performance or battery life.",
                                   is_selected=False)
         option3.save()
 

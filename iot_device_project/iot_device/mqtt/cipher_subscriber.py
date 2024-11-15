@@ -56,24 +56,30 @@ class CipherSubscriber:
         self.mqttc.loop_forever()
         print(f"Received the following message: {self.mqttc.user_data_get()}")
 
-    def stop_loop(self):
-        self.mqttc.loop_stop()
+    def add_value(self, value):
+        self.measurement_publisher.add_value(value)
 
     # methods to start and stop measurement subscriber loop on a different thread
-    def start_measurement_thread(self):
-        self.measurements_publisher_thread = threading.Thread(target=self.start_measurements)
+    def __start_measurement_thread(self):
+        self.measurements_publisher_thread = threading.Thread(target=self.__start_measurements)
         self.measurements_publisher_thread.start()
 
-    def stop_measurements(self):
+    def __stop_measurements(self):
         if self.measurement_publisher is not None:
             self.measurement_publisher.stop_loop()
 
-    def start_measurements(self):
-        self.measurement_publisher = MeasurementsPublisher(self.active_cipher, self.device_name, self.password)
+    def __start_measurements(self):
+        self.measurement_publisher = MeasurementsPublisher(self.active_cipher,
+                                                           self.device_name,
+                                                           self.password)
         self.measurement_publisher.start_loop()
 
+    def stop(self):
+        self.__stop_measurements()
+        self.mqttc.loop_stop()
+
     # methods to handle mqtt events
-    def on_message(self, client, userdata, message):
+    def __on_message(self, client, userdata, message):
         """
             After publishing to the device_connected topic we wait to receive
             the active cipher suite on.
@@ -89,18 +95,18 @@ class CipherSubscriber:
         if not is_cipher_suite(cipher):
             print(f"Received not supported cipher - {message.payload}")
             self.active_cipher = None
-            self.stop_measurements()
+            self.__stop_measurements()
             return
 
         # if the cipher contained in the message is different from the active
         # one, stop measurements and change to the new one
         if cipher != self.active_cipher:
             print("New cipher received")
-            self.stop_measurements()
+            self.__stop_measurements()
             self.active_cipher = cipher
-            self.start_measurement_thread()
+            self.__start_measurement_thread()
 
-    def on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
+    def __on_subscribe(self, self1, userdata, mid, reason_code_list, properties):
         # Since we subscribed only for a single channel, reason_code_list contains
         # a single entry
         if reason_code_list[0].is_failure:
@@ -108,7 +114,7 @@ class CipherSubscriber:
         else:
             print(f"Broker granted the following QoS: {reason_code_list[0].value}")
 
-    def on_unsubscribe(self, self1, client, userdata, mid, reason_code_list, properties):
+    def __on_unsubscribe(self, self1, client, userdata, mid, reason_code_list, properties):
         # Be careful, the reason_code_list is only present in MQTTv5.
         # In MQTTv3 it will always be empty
         if len(reason_code_list) == 0 or not reason_code_list[0].is_failure:
@@ -117,7 +123,7 @@ class CipherSubscriber:
             print(f"Broker replied with failure: {reason_code_list[0]}")
         client.disconnect()
 
-    def on_connect(self,  client, userdata, flags, reason_code, properties):
+    def __on_connect(self,  client, userdata, flags, reason_code, properties):
         if reason_code.is_failure:
             print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
         else:

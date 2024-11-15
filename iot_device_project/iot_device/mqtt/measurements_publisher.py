@@ -1,5 +1,3 @@
-import time
-import random
 import json
 import paho.mqtt.client as mqtt
 
@@ -7,17 +5,18 @@ from files import file_util
 
 class MeasurementsPublisher:
 
-    def __init__(self, cipher, device_name, password):
+    def __init__(self, cipher, device_name, password, queue):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         self.cipher = cipher
         self.device_name = device_name
         self.password = password
+        self.value_queue = queue
+        self.unacked_publish = set()
 
     def start_loop(self):
-        unacked_publish = set()
         self.mqttc.on_publish = on_publish
 
-        self.mqttc.user_data_set(unacked_publish)
+        self.mqttc.user_data_set(self.unacked_publish)
         port = 1883
 
         if file_util.should_use_ssl():
@@ -35,37 +34,23 @@ class MeasurementsPublisher:
         self.mqttc.connect("raspberrypi.local", port)
         self.mqttc.loop_start()
 
-        while True:
-            # Generate a random float between 30 and 80
-            temperature = random.uniform(20.0, 30.0)
-            data = {
-                "device_name": self.device_name,
-                "temperature": temperature
-            }
-            msg_info = self.mqttc.publish("measurements", json.dumps(data), qos=1)
-            print(f"sent message {json.dumps(data)}")
-            unacked_publish.add(msg_info.mid)
-            msg_info.wait_for_publish()
-            time.sleep(10)
-
-
     def stop_loop(self):
         self.mqttc.loop_stop()
 
+    def add_value(self, value):
+        data = {
+            "device_name": self.device_name,
+            "temperature": value
+        }
+        msg_info = self.mqttc.publish("measurements", json.dumps(data),
+                                      qos=1)
+        print(f"sent message {json.dumps(data)}")
+        self.unacked_publish.add(msg_info.mid)
+        msg_info.wait_for_publish()
 
 def on_publish(client, userdata, mid, reason_code, properties):
     # reason_code and properties will only be present in MQTTv5. It's always unset in MQTTv3
     try:
         userdata.remove(mid)
     except KeyError:
-        print("on_publish() is called with a mid not present in unacked_publish")
-        print("This is due to an unavoidable race-condition:")
-        print("* publish() return the mid of the message sent.")
-        print("* mid from publish() is added to unacked_publish by the main thread")
-        print("* on_publish() is called by the loop_start thread")
-        print("While unlikely (because on_publish() will be called after a network round-trip),")
-        print(" this is a race-condition that COULD happen")
-        print("")
-        print("The best solution to avoid race-condition is using the msg_info from publish()")
-        print("We could also try using a list of acknowledged mid rather than removing from pending list,")
-        print("but remember that mid could be re-used !")
+        return

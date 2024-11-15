@@ -32,14 +32,10 @@ class MqttPublisher:
         send_device_connected(self.password)
 
         while not self.stop_received:
-            print("Before value get")
             value = self.value_queue.get()  # Blocking until an item is available
-            print("After value get")
             if value is None:
                 break
-            print("mqtt_publisher before add value")
             self.cipher_subscriber.add_value(value)
-        print("mqqt_publisher exited loop")
 
     def stop_publishing(self):
         self.stop_received = True
@@ -47,6 +43,4 @@ class MqttPublisher:
         self.cipher_subscriber.stop()
 
     def add_value(self, value):
-        print("Before value put")
         self.value_queue.put(value)
-        print("After value put")

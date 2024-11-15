@@ -57,7 +57,6 @@ class CipherSubscriber:
         print(f"Received the following message: {self.mqttc.user_data_get()}")
 
     def add_value(self, value):
-        print("CipherSubscriber - add value")
         if self.measurement_publisher == None:
            return
         self.measurement_publisher.add_value(value)

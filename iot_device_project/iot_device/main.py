@@ -4,8 +4,9 @@ import time
 import threading
 
 from interface.mqtt_publisher import MqttPublisher
-from mqtt.device_connected_publisher import send_device_connected
-
+"""
+This file simulates usage from a user
+"""
 device_name = None
 
 # Check if an argument was passed
@@ -26,7 +27,5 @@ mqtt_publisher_thread.start()
 while True:
     # Generate a random float between 30 and 80
     temperature = random.uniform(20.0, 30.0)
-    print(temperature)
     mqtt_publisher.add_value(temperature)
-    print("put")
     time.sleep(5)

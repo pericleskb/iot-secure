@@ -1,11 +1,10 @@
 import queue
 import threading
 
-from mqtt.measurements_publisher import MeasurementsPublisher
 from mqtt.cipher_subscriber import CipherSubscriber
 from mqtt.device_connected_publisher import send_device_connected
 
-class MqttPublisher:
+class IoTValuePublisher:
 
     def __init__(self, device_name, password):
         self.device_name = device_name

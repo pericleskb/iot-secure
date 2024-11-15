@@ -3,7 +3,7 @@ import random
 import time
 import threading
 
-from interface.mqtt_publisher import MqttPublisher
+from interface.iot_value_publisher import IoTValuePublisher
 """
 This file simulates usage from a user
 """
@@ -16,7 +16,7 @@ if len(sys.argv) != 3:
 
 device_name = sys.argv[1]
 password = sys.argv[2]
-mqtt_publisher = MqttPublisher(device_name, password)
+mqtt_publisher = IoTValuePublisher(device_name, password)
 
 def __start_mqtt_publisher():
     mqtt_publisher.start_publishing()

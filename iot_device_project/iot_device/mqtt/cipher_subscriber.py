@@ -24,10 +24,10 @@ class CipherSubscriber:
         self.password = password
 
     def start_subscribe_loop(self):
-        self.mqttc.on_connect = self.on_connect
-        self.mqttc.on_message = self.on_message
-        self.mqttc.on_subscribe = self.on_subscribe
-        self.mqttc.on_unsubscribe = self.on_unsubscribe
+        self.mqttc.on_connect = self.__on_connect
+        self.mqttc.on_message = self.__on_message
+        self.mqttc.on_subscribe = self.__on_subscribe
+        self.mqttc.on_unsubscribe = self.__on_unsubscribe
 
         # if no ssl files defined, connect to the mqtt broker's http port
         port = 1883
@@ -57,6 +57,9 @@ class CipherSubscriber:
         print(f"Received the following message: {self.mqttc.user_data_get()}")
 
     def add_value(self, value):
+        print("CipherSubscriber - add value")
+        if self.measurement_publisher == None:
+           return
         self.measurement_publisher.add_value(value)
 
     # methods to start and stop measurement subscriber loop on a different thread

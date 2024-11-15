@@ -5,12 +5,11 @@ from files import file_util
 
 class MeasurementsPublisher:
 
-    def __init__(self, cipher, device_name, password, queue):
+    def __init__(self, cipher, device_name, password):
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         self.cipher = cipher
         self.device_name = device_name
         self.password = password
-        self.value_queue = queue
         self.unacked_publish = set()
 
     def start_loop(self):

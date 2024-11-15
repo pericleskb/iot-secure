@@ -7,34 +7,43 @@ class Migration(migrations.Migration):
 
     def populate_db(apps, schema_editor):
         SecurityOptions = apps.get_model("web_server", "SecurityOptions")
-        option1 = SecurityOptions(option_code="ECDHE-ECDSA-AES256-GCM-SHA384",
-                                  option_description="Best for Security",
-                                  option_text="This encryption suite offers a high level of security, making it suitable "
-                                              "for scenarios where protecting sensitive information is critical.<br>"
-                                              "It provides strong encryption that is more resistant to attacks, "
-                                              "making it ideal for applications or devices where security is prioritized over performance.<br>"
-                                              "This choice is perfect for environments handling sensitive or confidential data that needs maximum protection.",
-                                  is_selected=True)
-        option1.save()
-        option2 = SecurityOptions(option_code="ECDHE-ECDSA-AES128-GCM-SHA256",
-                                  option_description="Best for Performance",
-                                  option_text="This suite balances security with performance, offering adequate protection "
-                                              "while requiring fewer resources to operate efficiently.<br>"
-                                              "It’s designed for devices that may have limited processing power or memory, "
-                                              "such as smaller IoT devices or systems where speed is important.<br>"
-                                              "This option provides good security without overburdening resource-limited devices,"
-                                              " making it ideal for applications where performance is critical.",
-                                  is_selected=False)
-        option2.save()
-        option3 = SecurityOptions(option_code="ECDHE-ECDSA-CHACHA20-POLY1305",
+        option1 = SecurityOptions(option_code="ECDHE-ECDSA-CHACHA20-POLY1305",
                                   option_description="Best for Mobile Devices",
                                   option_text="This suite is particularly suited for mobile devices that lack specialized hardware to speed up encryption.<br>"
                                               "The ChaCha20 encryption algorithm in this suite is designed to perform efficiently even on devices without"
                                               " encryption hardware, making it perfect for mobile phones, tablets, or other devices where battery life and"
-                                              " processing power are limited.<br>"
-                                              "This option helps ensure secure connections without significantly impacting device performance or battery life.",
+                                              " processing power are limited. It offers security levels similar to ECDHE-ECDSA-AES256-GCM-SHA384.",
+                                  is_selected=False)
+        option1.save()
+        option2 = SecurityOptions(option_code="ECDHE-ECDSA-AES256-GCM-SHA384",
+                                  option_description="Best for Security on devices with hardware acceleration",
+                                  option_text="This encryption suite offers a high level of security, making it suitable "
+                                              "for scenarios where protecting sensitive information is critical. It is recommended for devices which "
+                                              "contain hardware acceleration for AES.<br>"
+                                              "It provides strong encryption that is resistant to attacks, "
+                                              "making it ideal for applications or devices where security is prioritized over performance.<br>"
+                                              "This choice is perfect for environments handling sensitive or confidential data that needs maximum protection.",
+                                  is_selected=True)
+        option2.save()
+        option3 = SecurityOptions(option_code="ECDHE-ECDSA-AES128-GCM-SHA256",
+                                  option_description="Balanced Security and Performance on devices with hardware acceleration",
+                                  option_text="This suite balances security with performance, offering adequate protection "
+                                              "while requiring fewer resources to operate efficiently.<br>"
+                                              "It’s designed for devices that may have limited processing power or memory, "
+                                              "such as constrained IoT devices.<br>"
+                                              "This option provides good security without overburdening resource-limited devices,"
+                                              " making it ideal for applications where performance is critical.",
                                   is_selected=False)
         option3.save()
+        option4 = SecurityOptions(option_code="ECDHE-ECDSA-AES256-SHA384",
+                                  option_description="Suitable for Compatibility with Legacy Systems",
+                                  option_text="This encryption suite uses AES-256 with SHA-384 for message integrity, making it a reliable option for environments "
+                                              "where GCM support may not be available.<br>"
+                                              "It is particularly suitable for systems or applications that require strong encryption but may not support newer, GCM-based methods.<br>"
+                                              "While it lacks the speed and added security of GCM, it still provides robust encryption that is resistant to common attacks, "
+                                              "making it ideal for systems where maintaining compatibility is a priority.",
+                                  is_selected=False)
+        option4.save()
 
     dependencies = [
         ('web_server', '0001_initial'),

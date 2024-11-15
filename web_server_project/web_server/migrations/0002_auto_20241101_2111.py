@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
                                               "The ChaCha20 encryption algorithm in this suite is designed to perform efficiently even on devices without"
                                               " encryption hardware, making it perfect for mobile phones, tablets, or other devices where battery life and"
                                               " processing power are limited. It offers security levels similar to ECDHE-ECDSA-AES256-GCM-SHA384.",
-                                  is_selected=False)
+                                  is_selected=True)
         option1.save()
         option2 = SecurityOptions(option_code="ECDHE-ECDSA-AES256-GCM-SHA384",
                                   option_description="Best for Security on devices with hardware acceleration",
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                                               "It provides strong encryption that is resistant to attacks, "
                                               "making it ideal for applications or devices where security is prioritized over performance.<br>"
                                               "This choice is perfect for environments handling sensitive or confidential data that needs maximum protection.",
-                                  is_selected=True)
+                                  is_selected=False)
         option2.save()
         option3 = SecurityOptions(option_code="ECDHE-ECDSA-AES128-GCM-SHA256",
                                   option_description="Balanced Security and Performance on devices with hardware acceleration",

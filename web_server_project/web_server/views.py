@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
+from django.contrib.auth import logout, login
+
 from collections import defaultdict
 import json
 
@@ -25,8 +28,12 @@ def register(request):
     else:
         return render(request, "web_server/register.html")
 
-def login(request): 
+def login_view(request):
     return render(request, "web_server/login.html")
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/login/')
 
 def login_ajax(request):
     if request.method == 'POST':
@@ -35,12 +42,14 @@ def login_ajax(request):
         user = User.objects.filter(username=username, password=password)
         if user:
             #login
+            login(request, user)
             return JsonResponse(
                 {'status': 'success', 'message': 'Login successful'})
         else:
             return JsonResponse(
                 {'status': 'error', 'message': 'Invalid username or password'})
 
+@login_required
 def settings(request):
     return render(request, "web_server/settings.html")
 

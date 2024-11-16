@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
+from django.contrib.auth.models import AnonymousUser
 from collections import defaultdict
 import json
 
@@ -35,14 +36,24 @@ def login_ajax(request):
         user = User.objects.filter(username=username, password=password)
         if user:
             #login
+            request.session['logged_in'] = True
             return JsonResponse(
                 {'status': 'success', 'message': 'Login successful'})
         else:
             return JsonResponse(
                 {'status': 'error', 'message': 'Invalid username or password'})
 
+
+def logout(request):
+    print("LOGOUT")
+    request.session['logged_in'] = False
+    return HttpResponseRedirect(reverse("web_server:login"))
+
 def settings(request):
-    return render(request, "web_server/settings.html")
+    if request.session.get('logged_in'):
+        return render(request, "web_server/settings.html")
+    else:
+        return HttpResponseRedirect(reverse("web_server:login"))
 
 def get_options(request):
     options = SecurityOptions.objects.all().values()

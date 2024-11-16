@@ -75,7 +75,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" required>
             </div>
-            <input type="hidden" id="hashed-password" name="password">
+            <input type="hidden" id="hidden-password" name="password">
             <div class="input-group">
                 <label for="password">Confirm Password</label>
                 <input type="password" id="confirmPassword" required>
@@ -85,21 +85,13 @@
         </form>
 
         <script>
-            async function hashPassword(password) {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(password);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                return hashHex;
-            }
 
             const form = document.getElementById('register-form');
             form.addEventListener('submit', async function (event) {
                 event.preventDefault();
                 if (validateForm()) {
                     const passwordField = document.getElementById('password');
-                    const hiddenPasswordField = passwordField;
+                    const hiddenPasswordField = document.getElementById('hidden-password');
                     hiddenPasswordField.value = passwordField.value;
                     form.submit();
                 }

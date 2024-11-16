@@ -99,9 +99,8 @@
                 event.preventDefault();
                 if (validateForm()) {
                     const passwordField = document.getElementById('password');
-                    const hashedPassword = await hashPassword(passwordField.value);
-                    const hiddenPasswordField = document.getElementById('hashed-password');
-                    hiddenPasswordField.value = hashedPassword;
+                    const hiddenPasswordField = passwordField;
+                    hiddenPasswordField.value = passwordField.value;
                     form.submit();
                 }
             });
